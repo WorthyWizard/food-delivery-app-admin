@@ -1,0 +1,18 @@
+body {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  background-color: rgba(0,0,0,.1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0,0,0,.35);
+  box-shadow: 0 0 1px rgb(255 255 255 / 50%);
+  -webkit-box-shadow: 0 0 1px rgb(255 255 255 / 50%);
+}

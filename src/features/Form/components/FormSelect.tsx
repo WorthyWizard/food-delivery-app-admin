@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   Box,
   Chip,
@@ -9,11 +10,13 @@ import {
   Select,
   SelectChangeEvent,
   SelectProps,
+  Skeleton,
 } from "@mui/material";
-import { useCallback } from "react";
 import { FieldValues, useController } from "react-hook-form";
-import { HookFormFieldProps, SelectableOption } from "../types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+import { HookFormFieldProps, SelectableOption } from "../types";
+import { useFormState } from "../context/FormStateContext";
 
 type OmittedSelectProps = Omit<SelectProps<string | string[]>, "error">;
 
@@ -21,7 +24,6 @@ interface Props<TFormValues extends FieldValues = FieldValues>
   extends OmittedSelectProps,
     HookFormFieldProps<TFormValues> {
   options: SelectableOption[];
-  inputLabel: string;
   wrapperProps?: FormControlProps;
   onSelectChange?: () => void;
 }
@@ -30,16 +32,19 @@ const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
   const {
-    controllerConfig,
+    config,
     onSelectChange,
-    inputLabel,
     options,
     multiple,
     wrapperProps,
+    disabled,
+    label,
     ...rest
   } = props;
 
-  const { field, fieldState } = useController(controllerConfig);
+  const { isLoading } = useFormState() || {};
+
+  const { field, fieldState } = useController(config);
 
   const { error } = fieldState;
   const { ref, onChange: onFormFieldChange, ...fieldRest } = field;
@@ -66,14 +71,15 @@ const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
 
   return (
     <FormControl
-      sx={{ maxWidth: "800px" }}
       fullWidth
+      disabled={isLoading || disabled}
+      sx={{ maxWidth: "800px" }}
       error={Boolean(error?.message)}
       {...wrapperProps}
     >
-      <InputLabel error={Boolean(error?.message)}>{inputLabel}</InputLabel>
+      <InputLabel error={Boolean(error?.message)}>{label}</InputLabel>
       <Select
-        label={inputLabel}
+        label={label}
         onChange={changeHandler}
         multiple={multiple}
         inputRef={ref}

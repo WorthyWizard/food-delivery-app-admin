@@ -1,8 +1,10 @@
-import api from "@/api";
+import api from "@/api/main";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import modalsSlice from "./reducers/modalsSlice";
 
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
+  [modalsSlice.name]: modalsSlice.reducer,
 });
 
 export const setupStore = () => {

@@ -3,6 +3,7 @@ import { Checkbox, CheckboxProps } from "@mui/material";
 import { FieldValues, useController } from "react-hook-form";
 import { HookFormFieldProps } from "../types";
 import { StyledFormControlLabel } from "../styled";
+import { useFormState } from "../context/FormStateContext";
 
 interface Props<TFormValues extends FieldValues = FieldValues>
   extends CheckboxProps,
@@ -14,9 +15,11 @@ interface Props<TFormValues extends FieldValues = FieldValues>
 const FormCheckbox = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const { controllerConfig, label, onCheckboxChange, ...rest } = props;
+  const { config, label, onCheckboxChange, disabled, ...rest } = props;
 
-  const { field } = useController(controllerConfig);
+  const { isLoading } = useFormState() || {};
+
+  const { field } = useController(config);
   const { ref, value, onChange, ...fieldRest } = field;
 
   const changeHandler: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -28,6 +31,7 @@ const FormCheckbox = <TFieldValues extends FieldValues = FieldValues>(
 
   return (
     <StyledFormControlLabel
+      disabled={isLoading || disabled}
       inputRef={ref}
       label={label}
       labelPlacement="start"

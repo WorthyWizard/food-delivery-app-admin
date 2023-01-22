@@ -3,6 +3,7 @@ import {
   styled,
   AppBar as MuiAppBar,
   Drawer as MuiDrawer,
+  Stack,
 } from "@mui/material";
 
 const drawerWidth: number = 200;
@@ -53,4 +54,11 @@ export const Drawer = styled(MuiDrawer, {
       },
     }),
   },
+}));
+
+export const PageContentWrapper = styled(Stack)(({ theme }) => ({
+  width: "100%",
+  height: "100%",
+  padding: theme.spacing(2),
+  overflowY: "auto",
 }));

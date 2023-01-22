@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Toolbar,
@@ -10,12 +10,30 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import { AppBar, Drawer } from "./styled";
 import { Outlet } from "react-router-dom";
+
 import { Navigation } from "@/components";
+import { AppBar, Drawer, PageContentWrapper } from "./styled";
+import { useDomHeight } from "@/hooks";
 
 const Dashboard = () => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+
+  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
+
+  useEffect(() => {
+    window.addEventListener("resize", setResizeWidth);
+    return () => window.removeEventListener("resize", setResizeWidth);
+  }, []);
+
+  const dynamicHeight = useDomHeight({
+    initialHeight: windowHeight,
+    substractFrom: ["substract-height"],
+  });
+
+  const setResizeWidth = () => {
+    setWindowHeight(window.innerHeight);
+  };
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -23,7 +41,12 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar position="absolute" open={open} elevation={0}>
+      <AppBar
+        className="substract-height"
+        position="absolute"
+        open={open}
+        elevation={0}
+      >
         <Toolbar
           sx={{
             pr: "24px",
@@ -84,9 +107,9 @@ const Dashboard = () => {
         }}
       >
         <Toolbar />
-        <Stack width="100%" height="100%" p={2}>
+        <PageContentWrapper maxHeight={dynamicHeight}>
           <Outlet />
-        </Stack>
+        </PageContentWrapper>
       </Box>
     </Box>
   );
