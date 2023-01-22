@@ -1,8 +1,15 @@
 import { ChangeEventHandler } from "react";
-import { FormControl, Radio, RadioGroup, RadioGroupProps } from "@mui/material";
+import {
+  FormControl,
+  Radio,
+  RadioGroup,
+  RadioGroupProps,
+  Skeleton,
+} from "@mui/material";
 import { FieldValues, useController } from "react-hook-form";
 import { HookFormFieldProps, SelectableOption } from "../types";
 import { StyledFormControlLabel } from "../styled";
+import { useFormState } from "../context/FormStateContext";
 
 interface Props<TFormValues extends FieldValues = FieldValues>
   extends RadioGroupProps,
@@ -16,15 +23,12 @@ interface Props<TFormValues extends FieldValues = FieldValues>
 const FormRadioGroup = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const {
-    options,
-    controllerConfig,
-    radioGroupProps,
-    onRadioGroupChange,
-    ...rest
-  } = props;
+  const { options, config, radioGroupProps, onRadioGroupChange, ...rest } =
+    props;
 
-  const { field } = useController(controllerConfig);
+  const { isLoading } = useFormState() || {};
+
+  const { field } = useController(config);
 
   const { onChange, ...fieldRest } = field;
 
@@ -36,7 +40,7 @@ const FormRadioGroup = <TFieldValues extends FieldValues = FieldValues>(
   };
 
   return (
-    <FormControl>
+    <FormControl disabled={isLoading}>
       <RadioGroup
         {...radioGroupProps}
         {...rest}

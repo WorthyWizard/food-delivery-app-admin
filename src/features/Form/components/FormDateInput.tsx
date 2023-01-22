@@ -1,7 +1,9 @@
 import { DatePicker, DatePickerProps } from "@mui/x-date-pickers";
 import { FieldValues, useController } from "react-hook-form";
+
 import { HookFormFieldProps } from "../types";
 import { StyledTextField } from "../styled";
+import { useFormState } from "../context/FormStateContext";
 
 type OmittedDatePickerProps = Omit<
   DatePickerProps<Date, Date>,
@@ -15,16 +17,18 @@ interface Props<TFormValues extends FieldValues = FieldValues>
 const FormDateInput = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const { controllerConfig, ...rest } = props;
+  const { config, disabled, ...rest } = props;
 
-  const controller = useController(controllerConfig);
+  const { isLoading } = useFormState() || {};
+
+  const controller = useController(config);
+
   const { ref, ...fieldRest } = controller.field;
   const { error } = controller.fieldState;
 
   return (
     <DatePicker
-      {...rest}
-      {...fieldRest}
+      disabled={isLoading || disabled}
       inputRef={ref}
       renderInput={(params) => (
         <StyledTextField
@@ -33,6 +37,8 @@ const FormDateInput = <TFieldValues extends FieldValues = FieldValues>(
           helperText={error?.message}
         />
       )}
+      {...rest}
+      {...fieldRest}
     />
   );
 };
