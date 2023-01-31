@@ -1,6 +1,6 @@
 import { StorageItemAdapter } from "./types";
 
-class SessionStorageItem<V, K extends string = string>
+export class SessionStorageItem<V, K extends string = string>
   implements StorageItemAdapter<V>
 {
   constructor(private key: K, private value: V) {
@@ -22,5 +22,3 @@ class SessionStorageItem<V, K extends string = string>
     sessionStorage.removeItem(this.key);
   }
 }
-
-export default SessionStorageItem;

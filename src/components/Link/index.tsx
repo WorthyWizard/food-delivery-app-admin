@@ -13,7 +13,7 @@ interface Props extends ListItemButtonProps<typeof Link> {
   to: string;
 }
 
-const ListItemLink: FC<Props> = (props) => {
+export const ListItemLink: FC<Props> = (props) => {
   const { icon, primary, to, sx, ...rest } = props;
 
   return (
@@ -28,5 +28,3 @@ const ListItemLink: FC<Props> = (props) => {
     </ListItemButton>
   );
 };
-
-export default ListItemLink;

@@ -3,22 +3,29 @@ import { Stack } from "@mui/material";
 import { FileRejection, useDropzone } from "react-dropzone";
 
 import { Form, ImageUpload, Modal, ModalProps } from "@/components";
-import productsAPI from "@/api/products";
 import { ModalHeading } from "@/globalStyled";
-import Conditional from "@/layouts/Conditional";
-import { FormTextField, useForm } from "@/features/form";
+import {
+  FormMultiAutocomplete,
+  FormTextField,
+  SelectableOption,
+  useForm,
+} from "@/features/form";
 import { editProductSchema } from "@/validation/products";
-import { EditProductFormData } from "@/types/products/formData";
+import { EditProductFormData } from "@/types/product/forms";
 import { Button } from "@/components/UI";
-import { UpdateProduct } from "@/types/products/mutations";
-import useAsyncToast from "@/features/useAsyncToast";
+import { UpdateProduct } from "@/types/product/mutations";
 import { getProductImage } from "@/api/common/utils";
+import { categoriesAPI, productsAPI } from "@/api";
+import { useAsyncToast } from "@/features/useAsyncToast";
+import { Conditional } from "@/layouts";
+import { createFormData } from "@/utils";
+import { isFetchBaseQueryError } from "@/api/helpers";
 
 interface Props extends ModalProps {
   productId: string | null;
 }
 
-const EditProductModal: FC<Props> = (props) => {
+export const EditProductModal: FC<Props> = (props) => {
   const { productId, onClose, ...rest } = props;
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -32,6 +39,7 @@ const EditProductModal: FC<Props> = (props) => {
       price: "",
       rating: "",
       title: "",
+      categories: [],
     },
   });
 
@@ -47,14 +55,28 @@ const EditProductModal: FC<Props> = (props) => {
     skip: productId === null,
   });
 
+  const {
+    data: categories,
+    isLoading: getCatigoriesLoading,
+    isError: getCatigoriesError,
+  } = categoriesAPI.useGetCategoriesQuery();
+
   useEffect(() => {
     if (getProductSuccess) {
+      const categoriesOptions: SelectableOption[] = product.categories.map(
+        ({ name, _id }) => ({
+          label: name,
+          value: _id,
+        })
+      );
+
       reset({
         description: product.description,
         discount: product.discount ?? "",
         price: product.price,
         rating: product.rating ?? "",
         title: product.title,
+        categories: categoriesOptions,
       });
     }
   }, [getProductSuccess]);
@@ -65,8 +87,12 @@ const EditProductModal: FC<Props> = (props) => {
       isLoading: updateProductLoading,
       isSuccess: updateProductSuccess,
       isError: updateProductError,
+      error,
     },
   ] = productsAPI.useUpdateProductMutation();
+
+  const errorMessage =
+    isFetchBaseQueryError(error) && (error.data as any)?.message;
 
   useAsyncToast({
     success: {
@@ -75,13 +101,14 @@ const EditProductModal: FC<Props> = (props) => {
     },
     error: {
       flag: updateProductError,
-      message: "An error occurred while updating the product!",
+      message: errorMessage ?? "An error occurred while updating the product!",
     },
   });
 
   useEffect(() => {
     if (updateProductSuccess) {
       onClose && onClose({}, "backdropClick");
+      setImageFile(null);
     }
   }, [updateProductSuccess]);
 
@@ -103,29 +130,29 @@ const EditProductModal: FC<Props> = (props) => {
       "image/png": [".png"],
     },
     multiple: false,
-    maxSize: 100,
     onDrop,
     onDropRejected,
   });
 
-  const onSubmit = handleSubmit((formData) => {
-    const { description, discount, price, rating, title } = formData;
+  const onSubmit = handleSubmit((submitData) => {
+    const { description, discount, price, rating, title, categories } =
+      submitData;
 
-    const submitData: UpdateProduct = {
+    const categoriesIds = categories!.map((category) => category.value);
+
+    const formData = createFormData<UpdateProduct>({
       _id: productId!,
-      title: title,
-      description: description,
-      discount: discount === 0 ? null : parseInt(discount as string),
-      price: price ? parseInt(price as string) : undefined,
-      rating: rating ? parseFloat(rating as string) : undefined,
-    };
+      title: title ?? "",
+      description: description ?? "",
+      discount: discount === null ? String(0) : String(discount),
+      price: price ? String(price) : "",
+      rating: rating ? String(rating) : "",
+      image: imageFile ? imageFile : "null",
+      categories: JSON.stringify(categoriesIds),
+    });
 
-    updateProduct(submitData);
+    updateProduct(formData);
   });
-
-  const resetImageFile = () => {
-    setImageFile(null);
-  };
 
   const resetFileRejections = () => {
     setFileRejections([]);
@@ -136,14 +163,25 @@ const EditProductModal: FC<Props> = (props) => {
     resetFileRejections();
   };
 
+  const categoriesOptions: SelectableOption[] = (categories ?? []).map(
+    (category) => ({
+      label: category.name,
+      value: category._id,
+    })
+  );
+
   const isValidToSubmit =
     isValid && !updateProductLoading && !getProductLoading;
+
+  const isLoading = getProductLoading || getCatigoriesLoading;
+
+  const isError = getProductError || getCatigoriesError;
 
   return (
     <Modal sx={{ maxWidth: 1000 }} onClose={closeModalHandler} {...rest}>
       <ModalHeading>Edit Product</ModalHeading>
-      <Conditional isError={getProductError}>
-        <Form onSubmit={onSubmit}>
+      <Conditional isError={isError}>
+        <Form isLoading={isLoading} onSubmit={onSubmit}>
           <Stack width="100%" direction="row" gap={2}>
             <Stack flex={2} gap={2}>
               <FormTextField
@@ -158,16 +196,27 @@ const EditProductModal: FC<Props> = (props) => {
                 config={{ control, name: "description" }}
               />
             </Stack>
-            <Stack flex={1} gap={2}>
+            <Stack
+              flex={1}
+              gap={3}
+              pr={1}
+              maxHeight={450}
+              overflow="hidden auto"
+            >
               <ImageUpload
                 imageFile={imageFile}
-                resetImageFile={resetImageFile}
                 imagePreview={getProductImage(productId!)}
                 wrapperProps={{ sx: { maxWidth: "100%" } }}
                 dropzoneState={dropzoneState}
                 fileRejections={fileRejections}
               />
               <Stack mt="auto" gap={2}>
+                <FormMultiAutocomplete
+                  size="small"
+                  inputLabel="Categories"
+                  options={categoriesOptions}
+                  config={{ control, name: "categories" }}
+                />
                 <FormTextField
                   sx={{ flex: 3 }}
                   size="small"
@@ -199,5 +248,3 @@ const EditProductModal: FC<Props> = (props) => {
     </Modal>
   );
 };
-
-export default EditProductModal;

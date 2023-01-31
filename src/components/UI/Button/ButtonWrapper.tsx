@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Stack, StackProps } from "@mui/material";
 
-const ButtonWrapper: FC<StackProps> = (props) => {
+export const ButtonWrapper: FC<StackProps> = (props) => {
   const { children, ...rest } = props;
   return (
     <Stack
@@ -16,5 +16,3 @@ const ButtonWrapper: FC<StackProps> = (props) => {
     </Stack>
   );
 };
-
-export default ButtonWrapper;

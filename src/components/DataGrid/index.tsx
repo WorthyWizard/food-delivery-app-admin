@@ -2,13 +2,12 @@ import { FC } from "react";
 import {
   DataGrid as MuiDataGrid,
   DataGridProps,
-  GridCsvExportOptions,
   GridToolbar,
 } from "@mui/x-data-grid";
 
 interface Props extends DataGridProps {}
 
-const DataGrid: FC<Props> = (props) => {
+export const DataGrid: FC<Props> = (props) => {
   const { componentsProps, components, ...rest } = props;
 
   return (
@@ -30,5 +29,3 @@ const DataGrid: FC<Props> = (props) => {
     />
   );
 };
-
-export default DataGrid;

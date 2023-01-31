@@ -9,14 +9,14 @@ import {
 import { FC, useEffect } from "react";
 
 import { Button } from "@/components/UI";
-import productsAPI from "@/api/products";
-import useAsyncToast from "@/features/useAsyncToast";
+import { productsAPI } from "@/api";
+import { useAsyncToast } from "@/features/useAsyncToast";
 
 interface Props extends DialogProps {
   productId: string | null;
 }
 
-const DeleteProductDialog: FC<Props> = (props) => {
+export const DeleteProductDialog: FC<Props> = (props) => {
   const { productId, onClose, ...rest } = props;
 
   const [
@@ -80,5 +80,3 @@ const DeleteProductDialog: FC<Props> = (props) => {
     </Dialog>
   );
 };
-
-export default DeleteProductDialog;

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import type { HeightHookProps } from "./types";
 
-const useDomHeight = (props: HeightHookProps): number => {
+export const useDomHeight = (props: HeightHookProps): number => {
   const { substractFrom, initialHeight } = props;
 
   const [reducedHeight, setReducedHeight] = useState<number>(initialHeight);
@@ -21,5 +21,3 @@ const useDomHeight = (props: HeightHookProps): number => {
 
   return reducedHeight;
 };
-
-export default useDomHeight;

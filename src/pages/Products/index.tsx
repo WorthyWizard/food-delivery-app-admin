@@ -1,17 +1,22 @@
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
-import productsAPI from "@/api/products";
 import { DataGrid } from "@/components";
 import { Button, ButtonWrapper } from "@/components/UI";
 import { useAppSelector } from "@/hooks/redux";
-import useModals from "@/store/hooks/useModals";
 import { modalsStateSelector } from "@/store/selectors";
 import { productColumns } from "./columns";
-import DeleteProductDialog from "./modals/DeleteProductDialog";
-import EditProductModal from "./modals/EditProductModal";
-import CreateProductModal from "./modals/CreateProductModal";
+import { productsAPI } from "@/api";
+import { useModals } from "@/store/hooks";
+import {
+  CreateProductModal,
+  EditProductModal,
+  DeleteProductDialog,
+} from "./modals";
+import { useCallback } from "react";
+import { GridRowIdGetter } from "@mui/x-data-grid";
+import { Product } from "@/types/product/queries";
 
-const Product = () => {
+export const Products = () => {
   const { openModal, closeModal, closeMutationModal } = useModals();
 
   const { createProduct, editProduct, deleteProduct } =
@@ -23,6 +28,8 @@ const Product = () => {
     isFetching: getProductsFetching,
     isError: getProductsError,
   } = productsAPI.useGetProductsQuery();
+
+  const getRowId: GridRowIdGetter<Product> = useCallback((row) => row._id, []);
 
   return (
     <>
@@ -41,7 +48,7 @@ const Product = () => {
         error={getProductsError || undefined}
         rows={products ?? []}
         columns={productColumns}
-        getRowId={(row) => row._id}
+        getRowId={getRowId}
       />
       <CreateProductModal
         open={createProduct.isOpen}
@@ -60,5 +67,3 @@ const Product = () => {
     </>
   );
 };
-
-export default Product;

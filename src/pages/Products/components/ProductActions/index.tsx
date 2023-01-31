@@ -2,13 +2,13 @@ import { FC, memo } from "react";
 
 import { MenuButton, MenuButtonClickHandler } from "@/components";
 import { menuButtonOptions } from "../../hardcoded";
-import useModals from "@/store/hooks/useModals";
+import { useModals } from "@/store/hooks";
 
 interface Props {
   productId: string;
 }
 
-const ProductActions: FC<Props> = ({ productId }) => {
+export const ProductActions: FC<Props> = memo(({ productId }) => {
   const { openMutationModal } = useModals();
 
   const deleteProduct = () => {
@@ -31,6 +31,4 @@ const ProductActions: FC<Props> = ({ productId }) => {
   };
 
   return <MenuButton menuItems={menuButtonOptions} onClick={onMenuItemClick} />;
-};
-
-export default memo(ProductActions);
+});

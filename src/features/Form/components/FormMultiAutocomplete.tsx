@@ -1,15 +1,13 @@
-import { SyntheticEvent } from "react";
 import {
   Autocomplete,
   AutocompleteChangeReason,
   AutocompleteProps,
 } from "@mui/material";
 import { FieldValues, useController } from "react-hook-form";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
 import { StyledTextField } from "../styled";
 import { HookFormFieldProps, SelectableOption } from "../types";
-import { useFormState } from "../context/FormStateContext";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { SyntheticEvent } from "react";
 
 type OmittedAutocompleteProps = Omit<
   AutocompleteProps<SelectableOption, true, false, false>,
@@ -22,19 +20,12 @@ interface Props<TFormValues extends FieldValues = FieldValues>
   inputLabel?: string;
 }
 
-const FormMultiAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
+export const FormMultiAutocomplete = <
+  TFieldValues extends FieldValues = FieldValues
+>(
   props: Props<TFieldValues>
 ) => {
-  const {
-    inputLabel,
-    options = [],
-    config,
-    onChange,
-    disabled,
-    ...rest
-  } = props;
-
-  const { isLoading } = useFormState() || {};
+  const { inputLabel, options = [], config, onChange, ...rest } = props;
 
   const { field, fieldState } = useController(config);
 
@@ -54,7 +45,6 @@ const FormMultiAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
     <Autocomplete
       multiple
       disablePortal
-      disabled={isLoading || disabled}
       filterSelectedOptions
       defaultValue={[]}
       options={options}
@@ -82,5 +72,3 @@ const FormMultiAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
     />
   );
 };
-
-export default FormMultiAutocomplete;

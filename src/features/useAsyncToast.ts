@@ -11,20 +11,18 @@ interface AsyncToastHookProps {
   error?: AsyncToastHookCase;
 }
 
-const useAsyncToast = (props: AsyncToastHookProps) => {
+export const useAsyncToast = (props: AsyncToastHookProps) => {
   const { error, success } = props;
 
   useEffect(() => {
     if (success?.flag) {
-      toast.success(success.message ?? "Success");
+      toast.success(success.message);
     }
   }, [success?.flag]);
 
   useEffect(() => {
     if (error?.flag) {
-      toast.error(error.message ?? "An error occurred!");
+      toast.error(error.message);
     }
   }, [error?.flag]);
 };
-
-export default useAsyncToast;

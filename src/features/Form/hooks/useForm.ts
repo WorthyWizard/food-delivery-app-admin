@@ -17,7 +17,7 @@ export interface Props<TFormValues extends FieldValues = FieldValues>
   validationSchema: AnyObjectSchema;
 }
 
-const useForm = <TFormValues extends FieldValues = FieldValues>(
+export const useForm = <TFormValues extends FieldValues = FieldValues>(
   config: Props<TFormValues>
 ): FormReturnValues<TFormValues> => {
   const { validationSchema, ...rest } = config;
@@ -31,5 +31,3 @@ const useForm = <TFormValues extends FieldValues = FieldValues>(
 
   return hookForm;
 };
-
-export default useForm;

@@ -1,6 +1,6 @@
 import { useLocation, matchPath } from "react-router-dom";
 
-const useRouteMatch = (patterns: readonly string[]) => {
+export const useRouteMatch = (patterns: readonly string[]) => {
   const { pathname } = useLocation();
 
   for (let i = 0; i < patterns.length; i += 1) {
@@ -13,5 +13,3 @@ const useRouteMatch = (patterns: readonly string[]) => {
 
   return null;
 };
-
-export default useRouteMatch;

@@ -1,8 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
+
+import { Dashboard, Products, Users } from "@/pages";
 import { HOME, PRODUCTS, USERS } from "./endpointConstants";
-import Dashboard from "@/pages/Dashboard";
-import Products from "@/pages/Products";
-import Users from "@/pages/Users";
 
 export const router = createBrowserRouter([
   {

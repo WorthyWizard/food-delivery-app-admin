@@ -1,40 +1,43 @@
-import { ChangeEventHandler } from "react";
-import { Checkbox, CheckboxProps } from "@mui/material";
+import { ChangeEvent } from "react";
+import {
+  Checkbox,
+  CheckboxProps,
+  FormControlLabel,
+  FormControlLabelProps,
+} from "@mui/material";
 import { FieldValues, useController } from "react-hook-form";
 import { HookFormFieldProps } from "../types";
-import { StyledFormControlLabel } from "../styled";
-import { useFormState } from "../context/FormStateContext";
 
 interface Props<TFormValues extends FieldValues = FieldValues>
   extends CheckboxProps,
     HookFormFieldProps<TFormValues> {
   label: string;
-  onCheckboxChange?: () => void;
+  wrapperProps?: Partial<FormControlLabelProps>;
 }
 
-const FormCheckbox = <TFieldValues extends FieldValues = FieldValues>(
+export const FormCheckbox = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const { config, label, onCheckboxChange, disabled, ...rest } = props;
-
-  const { isLoading } = useFormState() || {};
+  const { config, label, onChange, wrapperProps, ...rest } = props;
 
   const { field } = useController(config);
-  const { ref, value, onChange, ...fieldRest } = field;
+  const { ref, value, onChange: onFieldChange, ...fieldRest } = field;
 
-  const changeHandler: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onChange(event.target.checked);
-    if (onCheckboxChange) {
-      onCheckboxChange();
-    }
+  const changeHandler = (
+    event: ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    onFieldChange(checked);
+
+    onChange && onChange(event, checked);
   };
 
   return (
-    <StyledFormControlLabel
-      disabled={isLoading || disabled}
+    <FormControlLabel
       inputRef={ref}
       label={label}
       labelPlacement="start"
+      {...wrapperProps}
       control={
         <Checkbox
           checked={value}
@@ -46,5 +49,3 @@ const FormCheckbox = <TFieldValues extends FieldValues = FieldValues>(
     />
   );
 };
-
-export default FormCheckbox;

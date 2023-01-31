@@ -1,35 +1,45 @@
 import { TimePicker, TimePickerProps } from "@mui/x-date-pickers";
 import { FieldValues, useController } from "react-hook-form";
-
 import { HookFormFieldProps } from "../types";
 import { StyledTextField } from "../styled";
-import { useFormState } from "../context/FormStateContext";
 
 type OmittedTimePickerProps = Omit<
   TimePickerProps<Date, Date>,
-  "renderInput" | "value" | "onChange"
+  "renderInput" | "value" | "onChange" | "inputRef"
 >;
 
 interface Props<TFormValues extends FieldValues = FieldValues>
   extends OmittedTimePickerProps,
-    HookFormFieldProps<TFormValues> {}
+    HookFormFieldProps<TFormValues> {
+  onChange?: (
+    value: Date | null,
+    keyboardInputValue?: string | undefined
+  ) => void;
+}
 
-const FormDateInput = <TFieldValues extends FieldValues = FieldValues>(
+export const FormTimeInput = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const { config, disabled, ...rest } = props;
-
-  const { isLoading } = useFormState() || {};
+  const { config, onChange, ...rest } = props;
 
   const { field, fieldState } = useController(config);
-
-  const { ref, ...fieldRest } = field;
+  const { ref, onChange: onFieldChange, ...fieldRest } = field;
   const { error } = fieldState;
+
+  const changeHandler = (
+    value: Date | null,
+    keyboardInputValue?: string | undefined
+  ) => {
+    onFieldChange(value);
+    onChange && onChange(value, keyboardInputValue);
+  };
 
   return (
     <TimePicker
-      disabled={isLoading || disabled}
+      {...rest}
+      {...fieldRest}
       inputRef={ref}
+      onChange={changeHandler}
       renderInput={(params) => (
         <StyledTextField
           {...params}
@@ -37,10 +47,6 @@ const FormDateInput = <TFieldValues extends FieldValues = FieldValues>(
           helperText={error?.message}
         />
       )}
-      {...rest}
-      {...fieldRest}
     />
   );
 };
-
-export default FormDateInput;

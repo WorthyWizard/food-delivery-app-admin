@@ -13,7 +13,7 @@ interface Props extends Omit<ModalProps, "children"> {
   children: ReactNode | ReactNode[];
 }
 
-const Modal: FC<Props> = (props) => {
+export const Modal: FC<Props> = (props) => {
   const { onClose, children, style, sx, ...rest } = props;
 
   const closeHandler = () => {
@@ -31,5 +31,3 @@ const Modal: FC<Props> = (props) => {
     </MuiModal>
   );
 };
-
-export default Modal;

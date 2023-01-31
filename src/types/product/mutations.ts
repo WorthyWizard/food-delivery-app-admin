@@ -7,6 +7,7 @@ export interface CreateProduct {
   image: Buffer;
   rating?: number;
   discount?: number | null;
+  categories: string[];
 }
 
 export type UpdateProduct = Partial<CreateProduct> & MongoObjectIdField;

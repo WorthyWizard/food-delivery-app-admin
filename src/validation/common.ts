@@ -1,5 +1,6 @@
-import { number } from "yup";
-import validationMessages from "./schemaMessages";
+import { SelectableOption } from "@/features/form";
+import { number, object, SchemaOf, string } from "yup";
+import { validationMessages } from "./schemaMessages";
 
 export const yupNumberOptional = number()
   .typeError(validationMessages.typeNumber)
@@ -21,3 +22,8 @@ export const yupNumberRequired = number()
     return value;
   })
   .required(validationMessages.required);
+
+export const selectableOption: SchemaOf<SelectableOption> = object().shape({
+  label: string().required(),
+  value: string().required(),
+});

@@ -1,13 +1,22 @@
-import { Product } from "@/types/products/dataTypes";
-import { Rating } from "@mui/material";
+import { getProductImage } from "@/api/common/utils";
+import { Product } from "@/types/product/queries";
+import { Avatar, Rating, Stack, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import ProductActions from "./components/ProductActions";
+import { ProductActions } from "./components";
 
 export const productColumns: GridColDef<Product>[] = [
   {
     field: "title",
     headerName: "Title",
     width: 350,
+    renderCell: ({ id, value }) => {
+      return (
+        <Stack direction="row" gap={1} alignItems="center">
+          <Avatar src={getProductImage(id as string)} />
+          <Typography variant="body2">{value}</Typography>
+        </Stack>
+      );
+    },
   },
   { field: "price", headerName: "Price", width: 100 },
   {

@@ -4,26 +4,19 @@ import { FC, useEffect, useState } from "react";
 import { DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
 
-import EditControls from "./EditControls";
+import { EditControls } from "./EditControls";
 import { DroppableWrapper, Image, ImageUploadWrapper } from "./styled";
 
 interface Props {
   imageFile: File | null;
-  resetImageFile: () => void;
   imagePreview?: string;
   fileRejections: FileRejection[];
   wrapperProps?: StackProps;
   dropzoneState: DropzoneState;
 }
 
-const ImageUpload: FC<Props> = (props) => {
-  const {
-    imageFile,
-    imagePreview,
-    wrapperProps,
-    resetImageFile,
-    fileRejections,
-  } = props;
+export const ImageUpload: FC<Props> = (props) => {
+  const { imageFile, imagePreview, wrapperProps, fileRejections } = props;
 
   const { getInputProps, getRootProps, open, isDragActive } =
     props.dropzoneState;
@@ -61,11 +54,6 @@ const ImageUpload: FC<Props> = (props) => {
     }
   }, [fileRejections]);
 
-  const resetImage = () => {
-    resetImageFile();
-    setPreview("");
-  };
-
   return (
     <Stack>
       <ImageUploadWrapper {...wrapperProps}>
@@ -74,7 +62,6 @@ const ImageUpload: FC<Props> = (props) => {
             <Image src={preview} />
             <EditControls
               onEditClick={open}
-              onDeleteClick={resetImage}
               wrapperProps={{ className: "img-controls" }}
             />
           </>
@@ -97,5 +84,3 @@ const ImageUpload: FC<Props> = (props) => {
     </Stack>
   );
 };
-
-export default ImageUpload;

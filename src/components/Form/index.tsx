@@ -1,21 +1,22 @@
 import { FC } from "react";
 
 import { StyledForm } from "@/globalStyled";
-import { FormProps, FormStateProvider } from "@/features/form";
-import { ButtonWrapper } from "../UI";
+import { FormProps } from "@/features/form";
+import { Overlay } from "./Overlay";
 
 interface Props extends FormProps {
   isLoading?: boolean;
 }
 
-const Form: FC<Props> = (props) => {
+export const Form: FC<Props> = (props) => {
   const { children, isLoading, ...rest } = props;
 
   return (
-    <FormStateProvider isLoading={isLoading}>
-      <StyledForm {...rest}>{children}</StyledForm>
-    </FormStateProvider>
+    <StyledForm {...rest}>
+      <Overlay
+        sx={{ ...(isLoading && { opacity: 1, visibility: "visible" }) }}
+      />
+      {children}
+    </StyledForm>
   );
 };
-
-export default Form;

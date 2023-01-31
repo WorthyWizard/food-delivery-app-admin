@@ -12,7 +12,7 @@ interface Props extends Omit<IconButtonProps, "onClick"> {
   onClick?: MenuButtonClickHandler;
 }
 
-const MenuButton: FC<Props> = (props) => {
+export const MenuButton: FC<Props> = (props) => {
   const { menuItems, menuProps, onClick, ...rest } = props;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -55,5 +55,3 @@ const MenuButton: FC<Props> = (props) => {
     </div>
   );
 };
-
-export default MenuButton;

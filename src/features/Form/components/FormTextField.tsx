@@ -1,6 +1,6 @@
 import { OutlinedTextFieldProps } from "@mui/material";
+import { ChangeEvent } from "react";
 import { FieldValues, useController } from "react-hook-form";
-import { useFormState } from "../context/FormStateContext";
 import { StyledTextField } from "../styled";
 import { HookFormFieldProps } from "../types";
 
@@ -10,28 +10,31 @@ interface Props<TFormValues extends FieldValues = FieldValues>
   extends OmittedOutlinedTextFieldProps,
     HookFormFieldProps<TFormValues> {}
 
-const FormTextField = <TFieldValues extends FieldValues = FieldValues>(
+export const FormTextField = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const { config, multiline, disabled, ...rest } = props;
-
-  const { isLoading } = useFormState() || {};
+  const { config, onChange, ...rest } = props;
 
   const controller = useController(config);
-  const { ref, ...fieldRest } = controller.field;
+  const { ref, onChange: onFieldChange, ...fieldRest } = controller.field;
   const { error } = controller.fieldState;
+
+  const changeHandler = (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    onFieldChange(event.target.value);
+
+    onChange && onChange(event);
+  };
 
   return (
     <StyledTextField
-      disabled={isLoading || disabled}
-      inputRef={ref}
-      multiline={multiline}
+      onChange={changeHandler}
       {...rest}
       {...fieldRest}
+      inputRef={ref}
       error={Boolean(error?.message)}
       helperText={error?.message}
     />
   );
 };
-
-export default FormTextField;

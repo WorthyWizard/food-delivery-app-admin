@@ -1,12 +1,10 @@
 import { bindActionCreators } from "@reduxjs/toolkit";
 
 import { useAppDispatch } from "@/hooks/redux";
-import modalsSlice from "../reducers/modalsSlice";
+import { modalsSlice } from "../reducers";
 
-const useModals = () => {
+export const useModals = () => {
   const dispatch = useAppDispatch();
 
   return bindActionCreators(modalsSlice.actions, dispatch);
 };
-
-export default useModals;

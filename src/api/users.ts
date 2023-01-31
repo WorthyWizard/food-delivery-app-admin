@@ -1,9 +1,9 @@
 import { MongoObjectId, MongoObjectIdField } from "@/types/mongo";
-import { User } from "@/types/users/dataTypes";
-import { CreateUser, UpdateUser } from "@/types/users/mutations";
-import api from "./main";
+import { User } from "@/types/user/queries";
+import { CreateUser, UpdateUser } from "@/types/user/mutations";
+import { api } from "./main";
 
-const usersAPI = api.injectEndpoints({
+export const usersAPI = api.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query<User[], null>({
       query: () => "/users",
@@ -40,5 +40,3 @@ const usersAPI = api.injectEndpoints({
     }),
   }),
 });
-
-export default usersAPI;

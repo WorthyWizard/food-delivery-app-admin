@@ -1,10 +1,14 @@
-import { SchemaOf, object, string } from "yup";
+import { SchemaOf, object, string, array } from "yup";
 import {
   CreateProductFormData,
   EditProductFormData,
-} from "@/types/products/formData";
-import validationMessages from "../schemaMessages";
-import { yupNumberOptional, yupNumberRequired } from "../common";
+} from "@/types/product/forms";
+import { validationMessages } from "../schemaMessages";
+import {
+  selectableOption,
+  yupNumberOptional,
+  yupNumberRequired,
+} from "../common";
 
 export const createProductSchema: SchemaOf<CreateProductFormData> =
   object().shape({
@@ -15,6 +19,9 @@ export const createProductSchema: SchemaOf<CreateProductFormData> =
     price: yupNumberRequired.positive(validationMessages.positive),
     rating: yupNumberOptional.positive(validationMessages).max(5),
     title: string().required(validationMessages.required),
+    categories: array()
+      .of(selectableOption)
+      .min(1, "At least one category must be selected!"),
   });
 
 export const editProductSchema: SchemaOf<EditProductFormData> = object().shape({
@@ -25,4 +32,8 @@ export const editProductSchema: SchemaOf<EditProductFormData> = object().shape({
   price: yupNumberOptional.positive(validationMessages.positive),
   rating: yupNumberOptional.positive(validationMessages.positive).max(5),
   title: string().optional(),
+  categories: array()
+    .of(selectableOption)
+    .min(1, "At least one category must be selected!")
+    .optional(),
 });
