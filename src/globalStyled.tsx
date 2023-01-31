@@ -27,4 +27,5 @@ export const StyledForm = styled(
   alignItems: "center",
   padding: theme.spacing(0, 2),
   gap: theme.spacing(2),
+  position: "relative",
 }));

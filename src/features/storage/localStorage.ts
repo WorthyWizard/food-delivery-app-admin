@@ -1,6 +1,6 @@
 import { StorageItemAdapter } from "./types";
 
-class LocalStorageItem<Value, Key extends string = string>
+export class LocalStorageItem<Value, Key extends string = string>
   implements StorageItemAdapter<Value>
 {
   constructor(private key: Key, private value: Value) {
@@ -22,5 +22,3 @@ class LocalStorageItem<Value, Key extends string = string>
     localStorage.removeItem(this.key);
   }
 }
-
-export default LocalStorageItem;

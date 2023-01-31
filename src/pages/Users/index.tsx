@@ -1,7 +1,5 @@
 import { Typography } from "@mui/material";
 
-const Users = () => {
+export const Users = () => {
   return <Typography>Users</Typography>;
 };
-
-export default Users;

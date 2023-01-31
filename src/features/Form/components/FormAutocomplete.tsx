@@ -1,33 +1,31 @@
-import { SyntheticEvent } from "react";
 import {
   Autocomplete,
   AutocompleteChangeReason,
   AutocompleteProps,
 } from "@mui/material";
 import { FieldValues, useController } from "react-hook-form";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
 import { StyledTextField } from "../styled";
 import { HookFormFieldProps, SelectableOption } from "../types";
-import { useFormState } from "../context/FormStateContext";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { SyntheticEvent } from "react";
 
-type OmittedAutocompleteProps = Omit<
+type PickedAutocompleteProps = Omit<
   AutocompleteProps<SelectableOption, false, false, false>,
   "renderInput" | "multiple"
 >;
 
 interface Props<TFormValues extends FieldValues = FieldValues>
   extends HookFormFieldProps<TFormValues>,
-    OmittedAutocompleteProps {
-  label?: string;
+    PickedAutocompleteProps {
+  inputLabel?: string;
 }
 
-const FormAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
+export const FormAutocomplete = <
+  TFieldValues extends FieldValues = FieldValues
+>(
   props: Props<TFieldValues>
 ) => {
-  const { label, options = [], config, onChange, disabled, ...rest } = props;
-
-  const { isLoading } = useFormState() || {};
+  const { inputLabel, options = [], config, onChange, ...rest } = props;
 
   const { field, fieldState } = useController(config);
 
@@ -46,10 +44,9 @@ const FormAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
   return (
     <Autocomplete
       disablePortal
-      disabled={isLoading || disabled}
       defaultValue={{ label: "", value: "" }}
       options={options}
-      sx={{ width: "100%" }}
+      sx={{ width: "100%", maxWidth: "800px" }}
       onChange={changeHandler}
       getOptionLabel={(option) => option.label ?? ""}
       isOptionEqualToValue={(option, value) => option.value === value.value}
@@ -62,7 +59,7 @@ const FormAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
       renderInput={(params) => (
         <StyledTextField
           {...params}
-          label={label}
+          label={inputLabel}
           error={Boolean(error)}
           helperText={error?.message}
           inputRef={ref}
@@ -73,5 +70,3 @@ const FormAutocomplete = <TFieldValues extends FieldValues = FieldValues>(
     />
   );
 };
-
-export default FormAutocomplete;

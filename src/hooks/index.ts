@@ -1,3 +1,3 @@
-export { default as useRouteMatch } from "./useRouteMatch";
-export { default as useDomHeight } from "./useDomHeight";
+export * from "./useRouteMatch";
+export * from "./useDomHeight";
 export type { HeightHookProps } from "./useDomHeight/types";

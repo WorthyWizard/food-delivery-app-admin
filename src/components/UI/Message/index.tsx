@@ -18,7 +18,7 @@ type MessageOutput =
       icon?: JSX.Element;
     };
 
-const Message: FC<MessageOutput> = (props) => {
+export const Message: FC<MessageOutput> = (props) => {
   const { children, type, icon } = props;
 
   const theme = useTheme();
@@ -44,5 +44,3 @@ const Message: FC<MessageOutput> = (props) => {
     </StyledStack>
   );
 };
-
-export default Message;

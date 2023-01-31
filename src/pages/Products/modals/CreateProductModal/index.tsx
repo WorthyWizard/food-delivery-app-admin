@@ -1,22 +1,28 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { Box, Stack, Typography } from "@mui/material";
-import { FileError, FileRejection, useDropzone } from "react-dropzone";
-import { toast } from "react-toastify";
+import { Stack } from "@mui/material";
+import { FileRejection, useDropzone } from "react-dropzone";
 
 import { Form, Modal, ModalProps, ImageUpload } from "@/components";
-import productsAPI from "@/api/products";
 import { ModalHeading } from "@/globalStyled";
-import Conditional from "@/layouts/Conditional";
-import { FormTextField, useForm } from "@/features/form";
+import {
+  FormMultiAutocomplete,
+  FormTextField,
+  SelectableOption,
+  useForm,
+} from "@/features/form";
 import { createProductSchema } from "@/validation/products";
-import { CreateProductFormData } from "@/types/products/formData";
+import { CreateProductFormData } from "@/types/product/forms";
 import { Button } from "@/components/UI";
-import useAsyncToast from "@/features/useAsyncToast";
 import { createFormData } from "@/utils";
+import { categoriesAPI, productsAPI } from "@/api";
+import { useAsyncToast } from "@/features/useAsyncToast";
+import { Conditional } from "@/layouts";
+import { CreateProduct } from "@/types/product/mutations";
+import { isFetchBaseQueryError } from "@/api/helpers";
 
 interface Props extends ModalProps {}
 
-const CreateProductModal: FC<Props> = (props) => {
+export const CreateProductModal: FC<Props> = (props) => {
   const { onClose, ...rest } = props;
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -30,6 +36,7 @@ const CreateProductModal: FC<Props> = (props) => {
       price: "",
       rating: "",
       title: "",
+      categories: [],
     },
   });
 
@@ -45,6 +52,16 @@ const CreateProductModal: FC<Props> = (props) => {
     },
   ] = productsAPI.useCreateProductMutation();
 
+  const {
+    data: categories,
+    isLoading: getCatigoriesLoading,
+    isError: getCatigoriesError,
+    error,
+  } = categoriesAPI.useGetCategoriesQuery();
+
+  const errorMessage =
+    isFetchBaseQueryError(error) && (error.data as any)?.message;
+
   useAsyncToast({
     success: {
       flag: createProductSuccess,
@@ -52,7 +69,7 @@ const CreateProductModal: FC<Props> = (props) => {
     },
     error: {
       flag: createProductError,
-      message: "An error occurred while adding the product!",
+      message: errorMessage ?? "An error occurred while adding the product!",
     },
   });
 
@@ -87,36 +104,47 @@ const CreateProductModal: FC<Props> = (props) => {
   });
 
   const onSubmit = handleSubmit((formData) => {
-    const { description, discount, price, rating, title } = formData;
+    const { description, discount, price, rating, title, categories } =
+      formData;
 
-    const submitData = createFormData({
+    const categoriesIds = categories.map((category) => category.value);
+
+    const submitData = createFormData<CreateProduct>({
       title,
       description,
       discount: discount ? String(discount) : "",
       price: String(price),
       rating: rating ? String(rating) : "",
       image: imageFile!,
+      categories: JSON.stringify(categoriesIds),
     });
 
     createProduct(submitData);
   });
-
-  const resetImageFile = () => {
-    setImageFile(null);
-  };
 
   const closeModalHandler = () => {
     onClose && onClose({}, "backdropClick");
     setFileRejections([]);
   };
 
+  const categoriesOptions: SelectableOption[] = (categories ?? []).map(
+    (category) => ({
+      label: category.name,
+      value: category._id,
+    })
+  );
+
   const isValidToSubmit =
     isValid && Boolean(imageFile) && !createProductLoading;
+
+  const isLoading = getCatigoriesLoading;
+
+  const isError = getCatigoriesError;
 
   return (
     <Modal sx={{ maxWidth: 1000 }} onClose={closeModalHandler} {...rest}>
       <ModalHeading>Create Product</ModalHeading>
-      <Conditional isError={false}>
+      <Conditional isLoading={isLoading} isError={isError}>
         <Form onSubmit={onSubmit}>
           <Stack width="100%" direction="row" gap={2}>
             <Stack flex={2} gap={2}>
@@ -132,15 +160,26 @@ const CreateProductModal: FC<Props> = (props) => {
                 config={{ control, name: "description" }}
               />
             </Stack>
-            <Stack flex={1} gap={2}>
+            <Stack
+              flex={1}
+              gap={2}
+              pr={1}
+              maxHeight={450}
+              overflow="hidden auto"
+            >
               <ImageUpload
                 imageFile={imageFile}
-                resetImageFile={resetImageFile}
                 wrapperProps={{ sx: { maxWidth: "100%" } }}
                 fileRejections={fileRejections}
                 dropzoneState={dropzoneState}
               />
               <Stack mt="auto" gap={2}>
+                <FormMultiAutocomplete
+                  size="small"
+                  inputLabel="Categories"
+                  options={categoriesOptions}
+                  config={{ control, name: "categories" }}
+                />
                 <FormTextField
                   sx={{ flex: 3 }}
                   size="small"
@@ -172,5 +211,3 @@ const CreateProductModal: FC<Props> = (props) => {
     </Modal>
   );
 };
-
-export default CreateProductModal;

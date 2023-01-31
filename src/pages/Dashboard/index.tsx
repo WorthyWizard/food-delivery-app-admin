@@ -16,7 +16,7 @@ import { Navigation } from "@/components";
 import { AppBar, Drawer, PageContentWrapper } from "./styled";
 import { useDomHeight } from "@/hooks";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const [open, setOpen] = useState(true);
 
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
@@ -114,5 +114,3 @@ const Dashboard = () => {
     </Box>
   );
 };
-
-export default Dashboard;

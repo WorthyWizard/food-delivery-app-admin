@@ -6,13 +6,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { router } from "./router";
-import { setupStore } from "./store";
-import themes from "./themes";
 import "react-toastify/dist/ReactToastify.css";
+import { store } from "./store";
+import { themes } from "./themes";
 
-const store = setupStore();
-
-function App() {
+export function App() {
   return (
     <Provider store={store}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -29,5 +27,3 @@ function App() {
     </Provider>
   );
 }
-
-export default App;

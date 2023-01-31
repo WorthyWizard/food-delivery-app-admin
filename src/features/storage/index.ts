@@ -1,2 +1,2 @@
-export { default as LocalStorageItem } from "./localStorage";
-export { default as SessionStorageItem } from "./sessionStorage";
+export * from "./localStorage";
+export * from "./sessionStorage";

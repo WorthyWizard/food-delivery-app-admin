@@ -1,1 +1,1 @@
-export { default as Conditional } from "./Conditional";
+export * from "./Conditional";

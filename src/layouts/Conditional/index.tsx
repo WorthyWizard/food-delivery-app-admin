@@ -30,7 +30,7 @@ export type ConditionalProps = {
  * Wrapper component that renders its children only if there is neither loading nor error state specified.
  * Can be used to conditionally render components based on request results
  * */
-const Conditional: FC<ConditionalProps> = (props) => {
+export const Conditional: FC<ConditionalProps> = (props) => {
   const {
     children,
     isLoading,
@@ -73,5 +73,3 @@ const Conditional: FC<ConditionalProps> = (props) => {
 
   return jsx;
 };
-
-export default Conditional;

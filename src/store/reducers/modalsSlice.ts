@@ -28,7 +28,7 @@ const initialState = {
   deleteUser: initialModalWithMutationState,
 };
 
-const modalsSlice = createSlice({
+export const modalsSlice = createSlice({
   initialState,
   name: "modalsSlice",
   reducers: {
@@ -62,5 +62,3 @@ const modalsSlice = createSlice({
     },
   },
 });
-
-export default modalsSlice;

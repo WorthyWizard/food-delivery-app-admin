@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import {
   Box,
   Chip,
@@ -10,13 +9,11 @@ import {
   Select,
   SelectChangeEvent,
   SelectProps,
-  Skeleton,
 } from "@mui/material";
+import { ReactNode, useCallback } from "react";
 import { FieldValues, useController } from "react-hook-form";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
 import { HookFormFieldProps, SelectableOption } from "../types";
-import { useFormState } from "../context/FormStateContext";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 type OmittedSelectProps = Omit<SelectProps<string | string[]>, "error">;
 
@@ -25,35 +22,26 @@ interface Props<TFormValues extends FieldValues = FieldValues>
     HookFormFieldProps<TFormValues> {
   options: SelectableOption[];
   wrapperProps?: FormControlProps;
-  onSelectChange?: () => void;
 }
 
-const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
+export const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
   props: Props<TFieldValues>
 ) => {
-  const {
-    config,
-    onSelectChange,
-    options,
-    multiple,
-    wrapperProps,
-    disabled,
-    label,
-    ...rest
-  } = props;
-
-  const { isLoading } = useFormState() || {};
+  const { config, onChange, label, options, multiple, wrapperProps, ...rest } =
+    props;
 
   const { field, fieldState } = useController(config);
 
   const { error } = fieldState;
-  const { ref, onChange: onFormFieldChange, ...fieldRest } = field;
+  const { ref, onChange: onFieldChange, ...fieldRest } = field;
 
-  const changeHandler = (event: SelectChangeEvent<string | string[]>) => {
-    onFormFieldChange(event.target.value);
-    if (onSelectChange) {
-      onSelectChange();
-    }
+  const changeHandler = (
+    event: SelectChangeEvent<string | string[]>,
+    child: ReactNode
+  ) => {
+    onFieldChange(event.target.value);
+
+    onChange && onChange(event, child);
   };
 
   const renderValue = useCallback(
@@ -71,9 +59,8 @@ const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
 
   return (
     <FormControl
-      fullWidth
-      disabled={isLoading || disabled}
       sx={{ maxWidth: "800px" }}
+      fullWidth
       error={Boolean(error?.message)}
       {...wrapperProps}
     >
@@ -103,5 +90,3 @@ const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
     </FormControl>
   );
 };
-
-export default FormSelect;

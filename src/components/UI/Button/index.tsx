@@ -3,7 +3,7 @@ import { ButtonProps } from "@mui/material";
 
 import { StyledButton } from "./styled";
 
-const Button: FC<ButtonProps> = (props) => {
+export const Button: FC<ButtonProps> = (props) => {
   const { children, ...rest } = props;
 
   return (
@@ -12,5 +12,3 @@ const Button: FC<ButtonProps> = (props) => {
     </StyledButton>
   );
 };
-
-export default Button;

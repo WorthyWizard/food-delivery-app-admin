@@ -1,11 +1,11 @@
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import PeopleIcon from "@mui/icons-material/People";
-import ListItemLink from "../Link";
+import { ListItemLink } from "../Link";
 import { StyledList } from "./styled";
 import { useRouteMatch } from "@/hooks";
 import * as endpoints from "@/router/endpointConstants";
 
-const Navigation = () => {
+export const Navigation = () => {
   const routeMatch = useRouteMatch(Object.values(endpoints));
   const currentPath = routeMatch?.pattern?.path;
 
@@ -26,5 +26,3 @@ const Navigation = () => {
     </StyledList>
   );
 };
-
-export default Navigation;

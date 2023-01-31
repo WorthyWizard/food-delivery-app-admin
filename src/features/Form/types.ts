@@ -20,7 +20,9 @@ export interface HookFormFieldProps<TValues extends FieldValues = FieldValues> {
   config: Config<TValues>;
 }
 
-export interface FormReturnValues<TFormValues extends FieldValues = FieldValues>
-  extends UseFormReturn<TFormValues> {}
+export interface FormReturnValues<
+  TFormValues extends FieldValues = FieldValues,
+  TContext = any
+> extends UseFormReturn<TFormValues, TContext> {}
 
 export interface FormProps extends StackProps<"form"> {}
