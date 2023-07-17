@@ -2,6 +2,7 @@ import { Stack, StackProps } from "@mui/material";
 
 export const ButtonWrapper = (props: StackProps) => {
   const { children, ...rest } = props;
+
   return (
     <Stack
       py={1}
