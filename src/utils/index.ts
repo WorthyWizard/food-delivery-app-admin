@@ -3,7 +3,7 @@ export const createFormData = <T extends object>(
 ): FormData => {
   const formData = new FormData();
 
-  for (let property in source) {
+  for (const property in source) {
     formData.append(property, source[property]);
   }
 

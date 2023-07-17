@@ -7,13 +7,12 @@ import {
 } from "@mui/material";
 
 export const ModalHeading = styled(({ children, ...rest }: TypographyProps) => (
-  <Typography variant="h5" {...rest}>
+  <Typography variant="h6" {...rest}>
     {children}
   </Typography>
 ))(({ theme }) => ({
   textAlign: "center",
-  color: theme.palette.primary.main,
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
 })) as typeof Typography;
 
 export const StyledForm = styled(
@@ -26,6 +25,6 @@ export const StyledForm = styled(
   height: "100%",
   alignItems: "center",
   padding: theme.spacing(0, 2),
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   position: "relative",
 }));

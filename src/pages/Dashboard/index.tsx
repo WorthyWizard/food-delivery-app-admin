@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Divider,
-  Stack,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Outlet } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import { Outlet } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 
 import { Navigation } from "@/components";
-import { AppBar, Drawer, PageContentWrapper } from "./styled";
 import { useDomHeight } from "@/hooks";
+
+import { AppBar, Drawer, PageContentWrapper } from "./styled";
 
 export const Dashboard = () => {
   const [open, setOpen] = useState(true);

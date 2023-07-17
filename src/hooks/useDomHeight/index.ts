@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from "react";
+
 import type { HeightHookProps } from "./types";
 
 export const useDomHeight = (props: HeightHookProps): number => {

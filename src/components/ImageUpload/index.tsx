@@ -1,8 +1,8 @@
-import { Stack, StackProps, Typography } from "@mui/material";
-import { filesize } from "filesize";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
+import { Stack, StackProps, Typography } from "@mui/material";
+import { filesize } from "filesize";
 
 import { EditControls } from "./EditControls";
 import { DroppableWrapper, Image, ImageUploadWrapper } from "./styled";
@@ -15,7 +15,7 @@ interface Props {
   dropzoneState: DropzoneState;
 }
 
-export const ImageUpload: FC<Props> = (props) => {
+export const ImageUpload = (props: Props) => {
   const { imageFile, imagePreview, wrapperProps, fileRejections } = props;
 
   const { getInputProps, getRootProps, open, isDragActive } =
