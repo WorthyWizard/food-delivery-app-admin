@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { Dashboard, Products, Users } from "@/pages";
-import { HOME, PRODUCTS, USERS } from "./endpointConstants";
+import { ProductCategories } from "@/features/product-categories";
+import { Products } from "@/features/products";
+import { Dashboard } from "@/pages";
+
+import { CATEGORIES, HOME, PRODUCTS, USERS } from "./endpointConstants";
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +17,11 @@ export const router = createBrowserRouter([
       },
       {
         path: USERS,
-        element: <Users />,
+        element: <h1>Users</h1>,
+      },
+      {
+        path: CATEGORIES,
+        element: <ProductCategories />,
       },
     ],
   },

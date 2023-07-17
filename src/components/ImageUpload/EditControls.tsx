@@ -1,6 +1,6 @@
-import { FC, MouseEventHandler } from "react";
-import { IconButton, StackProps } from "@mui/material";
+import { MouseEventHandler } from "react";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { IconButton, StackProps } from "@mui/material";
 
 import { ControlsWrapper } from "./styled";
 
@@ -9,7 +9,7 @@ interface Props {
   onEditClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const EditControls: FC<Props> = (props) => {
+export const EditControls = (props: Props) => {
   const { wrapperProps, onEditClick } = props;
 
   return (

@@ -1,7 +1,7 @@
-import { Stack, StackProps, styled } from "@mui/material";
 import { forwardRef } from "react";
+import { Stack, StackProps, styled } from "@mui/material";
 
-export const ImageUploadWrapper = styled(Stack)(({ theme }) => ({
+export const ImageUploadWrapper = styled(Stack)(() => ({
   width: "100%",
   maxWidth: "250px",
   height: "250px",
@@ -41,7 +41,8 @@ interface DroppableWrapperProps extends StackProps {
 }
 
 export const DroppableWrapper = styled(
-  forwardRef((props: DroppableWrapperProps, ref) => (
+  // eslint-disable-next-line react/display-name
+  forwardRef<HTMLDivElement, DroppableWrapperProps>((props, ref) => (
     <Stack {...props} ref={ref} />
   )),
   {

@@ -1,14 +1,14 @@
-import { FC } from "react";
+import { StackProps } from "@mui/material";
 
 import { StyledForm } from "@/globalStyled";
-import { FormProps } from "@/features/form";
+
 import { Overlay } from "./Overlay";
 
-interface Props extends FormProps {
+interface Props extends StackProps<"form"> {
   isLoading?: boolean;
 }
 
-export const Form: FC<Props> = (props) => {
+export const Form = (props: Props) => {
   const { children, isLoading, ...rest } = props;
 
   return (

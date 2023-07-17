@@ -1,7 +1,7 @@
-import { FC, ReactNode } from "react";
+import { ReactNode } from "react";
 import { CircularProgress, Stack } from "@mui/material";
 
-import { Message, MessagesTypes } from "../../components/UI";
+import { Message, MessagesTypes } from "@/components/Message";
 
 export type ConditionalMessage =
   | {
@@ -30,7 +30,7 @@ export type ConditionalProps = {
  * Wrapper component that renders its children only if there is neither loading nor error state specified.
  * Can be used to conditionally render components based on request results
  * */
-export const Conditional: FC<ConditionalProps> = (props) => {
+export const Conditional = (props: ConditionalProps) => {
   const {
     children,
     isLoading,

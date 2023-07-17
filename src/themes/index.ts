@@ -1,4 +1,5 @@
 import { createTheme, responsiveFontSizes } from "@mui/material";
+
 import { defaultTheme } from "./default";
 
 export const themes = {

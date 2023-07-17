@@ -1,11 +1,10 @@
 import { CircularProgress, StackProps } from "@mui/material";
-import { FC } from "react";
 
 import { OverlayWrapper } from "./styled";
 
 interface Props extends StackProps {}
 
-export const Overlay: FC<Props> = (props) => {
+export const Overlay = (props: Props) => {
   return (
     <OverlayWrapper {...props}>
       <CircularProgress size={26} />
