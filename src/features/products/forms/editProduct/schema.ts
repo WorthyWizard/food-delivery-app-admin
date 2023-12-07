@@ -5,6 +5,7 @@ import { selectableOptionSchema } from "@/validation";
 export const EditProductSchema = object({
   title: string().optional(),
   description: string().optional(),
+  status: string().optional(),
   price: coerce
     .number()
     .positive()

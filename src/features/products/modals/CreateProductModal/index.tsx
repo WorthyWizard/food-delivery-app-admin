@@ -9,6 +9,7 @@ import { Conditional } from "@/layouts";
 import { Button, Modal, ModalProps } from "@/lib/mui";
 import {
   FormMultiAutocomplete,
+  FormSelect,
   FormTextField,
   SelectableOption,
   useForm,
@@ -16,8 +17,10 @@ import {
 import { FormDataAlike } from "@/types/common";
 
 import { useCreateProduct } from "../../api/createProduct";
+import { productStatusesMap } from "../../common";
 import { CreateProductFormData, CreateProductSchema } from "../../forms";
 import { CreateProduct } from "../../types/mutations";
+import { statusOptions } from "../hardcoded";
 
 interface Props extends ModalProps {}
 
@@ -32,6 +35,7 @@ export const CreateProductModal = (props: Props) => {
     defaultValues: {
       description: "",
       discount: "",
+      status: String(productStatusesMap.DRAFT),
       price: "",
       rating: "",
       title: "",
@@ -82,7 +86,7 @@ export const CreateProductModal = (props: Props) => {
   });
 
   const onSubmit = handleSubmit((formData) => {
-    const { description, discount, price, rating, title, categories } =
+    const { description, discount, price, rating, title, categories, status } =
       formData;
 
     const categoriesIds = categories.map((category) => category.value);
@@ -95,6 +99,7 @@ export const CreateProductModal = (props: Props) => {
       rating: rating ? String(rating) : "",
       image: imageFile!,
       categories: JSON.stringify(categoriesIds),
+      status: String(status),
     };
 
     createProduct(submitData);
@@ -136,20 +141,27 @@ export const CreateProductModal = (props: Props) => {
                 config={{ control, name: "description" }}
               />
             </Stack>
-            <Stack
-              flex={1}
-              gap={2}
-              pr={1}
-              maxHeight={450}
-              overflow="hidden auto"
-            >
+            <Stack flex={1} gap={2}>
               <ImageUpload
                 imageFile={imageFile}
                 wrapperProps={{ sx: { maxWidth: "100%" } }}
                 fileRejections={fileRejections}
                 dropzoneState={dropzoneState}
               />
-              <Stack mt="auto" gap={1}>
+              <Stack
+                pr={1}
+                mt="auto"
+                flex={1}
+                gap={0.5}
+                maxHeight={200}
+                overflow="hidden auto"
+              >
+                <FormSelect
+                  label="Status"
+                  options={statusOptions}
+                  wrapperProps={{ size: "small" }}
+                  config={{ control, name: "status" }}
+                />
                 <FormMultiAutocomplete
                   inputLabel="Categories"
                   options={categoriesOptions}
