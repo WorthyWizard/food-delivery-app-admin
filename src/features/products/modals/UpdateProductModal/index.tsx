@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { Stack } from "@mui/material";
 
-import { getProductImage } from "@/api";
 import { ButtonWrapper, Form, ImageUpload } from "@/components";
 import { useGetProductCategories } from "@/features/product-categories";
 import { ModalHeading } from "@/globalStyled";
@@ -10,6 +9,7 @@ import { Conditional } from "@/layouts";
 import { Button, Modal, ModalProps } from "@/lib/mui";
 import {
   FormMultiAutocomplete,
+  FormSelect,
   FormTextField,
   SelectableOption,
   useForm,
@@ -20,6 +20,7 @@ import { useUpdateProduct } from "../../api";
 import { useGetProduct } from "../../api/getProduct";
 import { EditProductFormData, EditProductSchema } from "../../forms";
 import { UpdateProduct } from "../../types/mutations";
+import { statusOptions } from "../hardcoded";
 
 interface Props extends ModalProps {
   productId: string | null;
@@ -36,6 +37,7 @@ export const UpdateProductModal = (props: Props) => {
     defaultValues: {
       description: "",
       discount: "",
+      status: "",
       price: "",
       rating: "",
       title: "",
@@ -76,6 +78,7 @@ export const UpdateProductModal = (props: Props) => {
         rating: product.rating ?? "",
         title: product.title,
         categories: categoriesOptions,
+        status: String(product.status),
       });
     }
   }, [getProductSuccess]);
@@ -116,7 +119,7 @@ export const UpdateProductModal = (props: Props) => {
   });
 
   const onSubmit = handleSubmit((submitData) => {
-    const { description, discount, price, rating, title, categories } =
+    const { description, discount, price, rating, title, categories, status } =
       submitData;
 
     const categoriesIds = categories!.map((category) => category.value);
@@ -125,6 +128,7 @@ export const UpdateProductModal = (props: Props) => {
       _id: productId!,
       title: title ?? "",
       description: description ?? "",
+      status: String(status),
       discount: discount === null ? String(0) : String(discount),
       price: price ? String(price) : "",
       rating: rating ? String(rating) : "",
@@ -175,21 +179,28 @@ export const UpdateProductModal = (props: Props) => {
                 config={{ control, name: "description" }}
               />
             </Stack>
-            <Stack
-              flex={1}
-              gap={2}
-              pr={1}
-              maxHeight={450}
-              overflow="hidden auto"
-            >
+            <Stack flex={1} gap={2}>
               <ImageUpload
                 imageFile={imageFile}
-                imagePreview={getProductImage(productId!)}
+                imagePreview={product?.imageUrl}
                 wrapperProps={{ sx: { maxWidth: "100%" } }}
                 dropzoneState={dropzoneState}
                 fileRejections={fileRejections}
               />
-              <Stack mt="auto" gap={1}>
+              <Stack
+                mt="auto"
+                gap={0.5}
+                pr={1}
+                flex={1}
+                maxHeight={200}
+                overflow="hidden auto"
+              >
+                <FormSelect
+                  label="Status"
+                  options={statusOptions}
+                  wrapperProps={{ size: "small" }}
+                  config={{ control, name: "status" }}
+                />
                 <FormMultiAutocomplete
                   inputLabel="Categories"
                   options={categoriesOptions}

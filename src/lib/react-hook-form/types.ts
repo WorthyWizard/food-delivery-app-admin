@@ -20,7 +20,7 @@ export interface ControlledFormFieldProps<
   config: UseControllerProps<TValues>;
 }
 
-export interface SelectableOption {
-  label: string;
+export interface SelectableOption<T extends string = string> {
+  label: T;
   value: string;
 }

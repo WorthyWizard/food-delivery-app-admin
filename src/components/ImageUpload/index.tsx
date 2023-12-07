@@ -21,9 +21,13 @@ export const ImageUpload = (props: Props) => {
   const { getInputProps, getRootProps, open, isDragActive } =
     props.dropzoneState;
 
-  const [preview, setPreview] = useState<string>(
-    !imageFile && imagePreview ? imagePreview : ""
-  );
+  const [preview, setPreview] = useState<string>("");
+
+  useEffect(() => {
+    if (!imageFile && imagePreview) {
+      setPreview(imagePreview);
+    }
+  }, [imageFile, imagePreview]);
 
   useEffect(() => {
     if (imageFile) {

@@ -1,10 +1,8 @@
-import {
-  DataGrid as MuiDataGrid,
-  DataGridProps,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGridProps, GridToolbar } from "@mui/x-data-grid";
 
 import { Conditional } from "@/layouts";
+
+import { StyledDataGrid } from "./styled";
 
 interface Props extends DataGridProps {
   /** If `true`, returns an error boundary instead of the data grid */
@@ -14,9 +12,11 @@ interface Props extends DataGridProps {
 export const DataGrid = (props: Props) => {
   const { slotProps, slots, isError, ...rest } = props;
 
+  const { toolbar } = slotProps || {};
+
   return (
     <Conditional isError={isError}>
-      <MuiDataGrid
+      <StyledDataGrid
         disableRowSelectionOnClick
         slots={{
           toolbar: GridToolbar,
@@ -27,6 +27,7 @@ export const DataGrid = (props: Props) => {
             showQuickFilter: true,
             printOptions: { disableToolbarButton: true },
             csvOptions: { disableToolbarButton: true },
+            ...toolbar,
           },
           ...slotProps,
         }}
