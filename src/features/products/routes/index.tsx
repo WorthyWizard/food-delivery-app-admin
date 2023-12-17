@@ -1,72 +1,22 @@
-import { useCallback } from "react";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { GridRowIdGetter } from "@mui/x-data-grid";
+import { Route, Routes } from "react-router-dom";
 
-import { ButtonWrapper } from "@/components";
-import { Button, DataGrid } from "@/lib/mui";
+import { params, productsEndpointsMap } from "@/router";
 
-import { useGetProducts } from "../api";
-import {
-  CreateProductModal,
-  DeleteProductDialog,
-  UpdateProductModal,
-} from "../modals";
-import { useProductModals } from "../store";
-import { Product } from "../types/queries";
+import { Product } from "./Product";
+import { Products } from "./Products";
 
-import { productColumns } from "./columns";
-
-export const Products = () => {
-  const {
-    createProduct,
-    updateProduct,
-    deleteProduct,
-    closeModal,
-    closeMutationModal,
-    openModal,
-  } = useProductModals();
-
-  const {
-    data: products,
-    isLoading: getProductsLoading,
-    isFetching: getProductsFetching,
-    isError: getProductsError,
-  } = useGetProducts();
-
-  const getRowId: GridRowIdGetter<Product> = useCallback((row) => row._id, []);
-
+export const ProductRoutes = () => {
   return (
-    <>
-      <ButtonWrapper pb={3} justifyContent="flex-end">
-        <Button
-          variant="outlined"
-          startIcon={<AddCircleOutlineOutlinedIcon />}
-          onClick={() => openModal("createProduct")}
-        >
-          New product
-        </Button>
-      </ButtonWrapper>
-      <DataGrid
-        isError={getProductsError}
-        loading={getProductsLoading || getProductsFetching}
-        rows={products ?? []}
-        columns={productColumns}
-        getRowId={getRowId}
+    <Routes>
+      <Route path="/" element={<Products />} />
+      <Route
+        path={productsEndpointsMap.NEW}
+        element={<Product type="create" />}
       />
-      <CreateProductModal
-        open={createProduct.isOpen}
-        onClose={() => closeModal("createProduct")}
+      <Route
+        path={`:${params.PRODUCT_ID}/${productsEndpointsMap.EDIT}`}
+        element={<Product type="edit" />}
       />
-      <UpdateProductModal
-        open={updateProduct.isOpen}
-        productId={updateProduct.id}
-        onClose={() => closeMutationModal("updateProduct")}
-      />
-      <DeleteProductDialog
-        open={deleteProduct.isOpen}
-        productId={deleteProduct.id}
-        onClose={() => closeMutationModal("deleteProduct")}
-      />
-    </>
+    </Routes>
   );
 };

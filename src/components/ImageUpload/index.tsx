@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
 import { Stack, StackProps, Typography } from "@mui/material";
@@ -7,23 +7,36 @@ import { filesize } from "filesize";
 import { EditControls } from "./EditControls";
 import { DroppableWrapper, Image, ImageUploadWrapper } from "./styled";
 
-interface Props {
+export interface ImageUploadProps {
   imageFile: File | null;
   imagePreview?: string;
   fileRejections: FileRejection[];
   wrapperProps?: StackProps;
   dropzoneState: DropzoneState;
+  inputProps?: React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  >;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
-export const ImageUpload = (props: Props) => {
-  const { imageFile, imagePreview, wrapperProps, fileRejections } = props;
+export const ImageUpload = (props: ImageUploadProps) => {
+  const {
+    imageFile,
+    imagePreview,
+    wrapperProps,
+    fileRejections,
+    dropzoneState,
+    inputProps,
+    isError,
+  } = props;
 
-  const { getInputProps, getRootProps, open, isDragActive } =
-    props.dropzoneState;
+  const { getInputProps, getRootProps, open, isDragActive } = dropzoneState;
 
   const [preview, setPreview] = useState<string>("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!imageFile && imagePreview) {
       setPreview(imagePreview);
     }
@@ -36,6 +49,8 @@ export const ImageUpload = (props: Props) => {
       setPreview(objectUrl);
 
       return () => URL.revokeObjectURL(objectUrl);
+    } else if (!imagePreview) {
+      setPreview("");
     }
   }, [imageFile]);
 
@@ -60,7 +75,7 @@ export const ImageUpload = (props: Props) => {
 
   return (
     <Stack>
-      <ImageUploadWrapper {...wrapperProps}>
+      <ImageUploadWrapper sx={{ borderColor: "red" }} {...wrapperProps}>
         {preview ? (
           <>
             <Image src={preview} />
@@ -70,7 +85,11 @@ export const ImageUpload = (props: Props) => {
             />
           </>
         ) : (
-          <DroppableWrapper isDragActive={isDragActive} {...getRootProps()}>
+          <DroppableWrapper
+            isDragActive={isDragActive}
+            isError={isError}
+            {...getRootProps()}
+          >
             <Typography>
               {isDragActive
                 ? "Drop the image here"
@@ -78,10 +97,10 @@ export const ImageUpload = (props: Props) => {
             </Typography>
           </DroppableWrapper>
         )}
-        <input {...getInputProps()} />
+        <input {...getInputProps(inputProps)} />
       </ImageUploadWrapper>
       {imageFile && (
-        <Typography mt={0.5}>
+        <Typography variant="caption" mt={0.5} ml={1}>
           {`${imageFile.name}, ${filesize(imageFile.size ?? null)}`}
         </Typography>
       )}

@@ -70,7 +70,7 @@
     "no-restricted-imports": [
       "error",
       {
-        "patterns": ["@/features/*/*", "@/lib/*/*"]
+        "patterns": ["@/*/*/*"]
       }
     ],
     "no-restricted-syntax": [
@@ -79,7 +79,9 @@
         "selector": "ExportDefaultDeclaration",
         "message": "Default exports are not allowed"
       }
-    ]
+    ],
+    "no-console": "error",
+    "@typescript-eslint/no-explicit-any": 1
   },
   "settings": {
     "react": {

@@ -1,30 +1,64 @@
 import { ReactNode } from "react";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { Modal as MuiModal, ModalProps, Stack } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  BoxProps,
+  LinearProgress,
+  Modal as MuiModal,
+  ModalProps,
+  Stack,
+  StackProps,
+  TypographyProps,
+} from "@mui/material";
 
-import { ModalInnerWrapper, StyledIconButton } from "./styled";
+import { Heading, ModalInnerWrapper, StyledIconButton } from "./styled";
 
 interface Props extends Omit<ModalProps, "children"> {
+  title?: string;
   children: ReactNode | ReactNode[];
+  isLoading?: boolean;
+  contentWrapperProps?: StackProps;
+  modalInnerProps?: BoxProps;
+  titleProps?: TypographyProps;
 }
 
 export const Modal = (props: Props) => {
-  const { onClose, children, style, sx, ...rest } = props;
+  const {
+    open,
+    onClose,
+    children,
+    isLoading,
+    contentWrapperProps,
+    title,
+    titleProps,
+    ...rest
+  } = props;
 
   const closeHandler = () => {
     onClose && onClose({}, "backdropClick");
   };
 
   return (
-    <MuiModal onClose={onClose} {...rest}>
-      <ModalInnerWrapper
-        style={style}
-        sx={{ maxWidth: 450, position: "relative", ...sx }}
-      >
+    <MuiModal open={open} onClose={onClose}>
+      <ModalInnerWrapper maxWidth={450} {...rest}>
+        {isLoading && (
+          <LinearProgress
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              borderTopRightRadius: "5px",
+              borderTopLeftRadius: "5px",
+            }}
+          />
+        )}
         <StyledIconButton size="small" onClick={closeHandler}>
-          <CloseRoundedIcon fontSize="small" />
+          <CloseIcon fontSize="small" />
         </StyledIconButton>
-        <Stack height="100%">{children}</Stack>
+        {title && <Heading {...titleProps}>{title}</Heading>}
+        <Stack height="100%" {...contentWrapperProps}>
+          {children}
+        </Stack>
       </ModalInnerWrapper>
     </MuiModal>
   );

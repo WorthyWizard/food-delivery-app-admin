@@ -5,23 +5,23 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { Collapse, List } from "@mui/material";
 
 import { useRouteMatch } from "@/hooks";
-import * as endpoints from "@/router/endpointConstants";
+import { mainEndpointsMap } from "@/router";
 
 import { ListItemLink } from "../../lib/mui/components/Link";
 
 import { StyledList } from "./styled";
 
 export const Navigation = () => {
-  const routeMatch = useRouteMatch(Object.values(endpoints));
+  const routeMatch = useRouteMatch(Object.values(mainEndpointsMap));
 
   const currentPath = routeMatch?.pattern?.path;
 
   const [productsItemOpen, setProductsItemOpen] = useState<boolean>(
-    currentPath === endpoints.CATEGORIES
+    currentPath === mainEndpointsMap.CATEGORIES,
   );
 
   const toggleProductsChildrenHandler: MouseEventHandler<HTMLButtonElement> = (
-    event
+    event,
   ) => {
     event.stopPropagation();
     event.preventDefault();
@@ -31,17 +31,17 @@ export const Navigation = () => {
   return (
     <StyledList component="nav">
       <ListItemLink
-        selected={currentPath === endpoints.USERS}
+        selected={currentPath === mainEndpointsMap.USERS}
         primary="Users"
         icon={<PeopleIcon />}
-        to={endpoints.USERS}
+        to={mainEndpointsMap.USERS}
       />
       <ListItemLink
         hasChildren
-        selected={currentPath === endpoints.PRODUCTS}
+        selected={currentPath === mainEndpointsMap.PRODUCTS}
         primary="Products"
         icon={<ShoppingBagIcon />}
-        to={endpoints.PRODUCTS}
+        to={mainEndpointsMap.PRODUCTS}
         itemActionProps={{
           onClick: toggleProductsChildrenHandler,
         }}
@@ -50,10 +50,10 @@ export const Navigation = () => {
         <List component="div" disablePadding>
           <ListItemLink
             sx={{ pl: 4 }}
-            selected={currentPath === endpoints.CATEGORIES}
+            selected={currentPath === mainEndpointsMap.CATEGORIES}
             primary="Categories"
             icon={<CategoryIcon />}
-            to={endpoints.CATEGORIES}
+            to={mainEndpointsMap.CATEGORIES}
           />
         </List>
       </Collapse>
