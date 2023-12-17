@@ -1,6 +1,8 @@
 import { memo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { MenuButton, MenuButtonClickHandler } from "@/lib/mui";
+import { productsEndpointsMap } from "@/router";
 
 import { menuButtonOptions } from "../../hardcoded";
 import { useProductModals } from "../../store";
@@ -12,8 +14,10 @@ interface Props {
 export const ProductActions = memo<Props>((props) => {
   const { productId } = props;
 
+  const navigate = useNavigate();
+
   const openMutationModal = useProductModals(
-    (state) => state.openMutationModal
+    (state) => state.openMutationModal,
   );
 
   const deleteProduct = () => {
@@ -21,7 +25,7 @@ export const ProductActions = memo<Props>((props) => {
   };
 
   const editProduct = () => {
-    openMutationModal({ id: productId, name: "updateProduct" });
+    navigate(`${productId}/${productsEndpointsMap.EDIT}`);
   };
 
   const onMenuItemClick: MenuButtonClickHandler = (_, currentItem) => {

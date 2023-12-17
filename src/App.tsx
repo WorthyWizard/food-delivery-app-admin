@@ -13,14 +13,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 export function App() {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ThemeProvider theme={themes.default}>
-        <CssBaseline />
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <ThemeProvider theme={themes.default}>
+          <CssBaseline />
           <RouterProvider router={router} />
-        </QueryClientProvider>
-        <ToastContainer pauseOnHover position="bottom-right" autoClose={5000} />
-      </ThemeProvider>
-    </LocalizationProvider>
+          <ToastContainer
+            pauseOnHover
+            position="bottom-right"
+            autoClose={5000}
+          />
+        </ThemeProvider>
+      </LocalizationProvider>
+    </QueryClientProvider>
   );
 }

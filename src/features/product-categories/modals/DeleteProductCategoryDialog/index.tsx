@@ -19,27 +19,23 @@ interface Props extends DialogProps {
 export const DeleteProductCategoryDialog = (props: Props) => {
   const { categoryId, onClose, ...rest } = props;
 
-  const {
-    mutate: deleteProductCategory,
-    isLoading: deleteProductLoading,
-    isSuccess: deleteProductSuccess,
-  } = useDeleteProductCategory();
+  const deleteProductCategory = useDeleteProductCategory();
 
   useEffect(() => {
-    if (deleteProductSuccess) {
+    if (deleteProductCategory.isSuccess) {
       closeModalHandler();
     }
-  }, [deleteProductSuccess]);
+  }, [deleteProductCategory.isSuccess]);
 
   const closeModalHandler = () => {
     onClose && onClose({}, "backdropClick");
   };
 
   const deleteProductHandler = () => {
-    deleteProductCategory(categoryId!);
+    deleteProductCategory.mutate(categoryId!);
   };
 
-  const disabled = deleteProductLoading;
+  const disabled = deleteProductCategory.isPending;
 
   return (
     <Dialog onClose={onClose} {...rest}>

@@ -38,6 +38,7 @@ export const Image = styled("img")(({ theme }) => ({
 
 interface DroppableWrapperProps extends StackProps {
   isDragActive?: boolean;
+  isError?: boolean;
 }
 
 export const DroppableWrapper = styled(
@@ -46,9 +47,9 @@ export const DroppableWrapper = styled(
     <Stack {...props} ref={ref} />
   )),
   {
-    shouldForwardProp: (prop) => prop !== "isDragActive",
-  }
-)(({ theme, isDragActive }) => ({
+    shouldForwardProp: (prop) => prop !== "isDragActive" && prop !== "isError",
+  },
+)(({ theme, isDragActive, isError }) => ({
   padding: theme.spacing(3),
   height: "100%",
   alignItems: "center",
@@ -61,6 +62,9 @@ export const DroppableWrapper = styled(
   }),
   ...(!isDragActive && {
     border: "3px dashed lightgrey",
+  }),
+  ...(isError && {
+    borderColor: theme.palette.error.main,
   }),
   "&:hover": {
     opacity: 0.7,

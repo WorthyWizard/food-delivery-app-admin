@@ -9,7 +9,7 @@ import { PRODUCT_CATEGORIES_PATH } from "./hardcoded";
 import { productCategoriesQueryKeys } from "./queryKeys";
 
 export const updateProductCategory = async (
-  body: UpdateProductCategory
+  body: UpdateProductCategory,
 ): Promise<ProductCategory> => {
   return axios.patch(`${PRODUCT_CATEGORIES_PATH}/${body._id}`, body);
 };
@@ -25,9 +25,9 @@ export const useUpdateProductCategory = (options?: Options) => {
 
   return useMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        productCategoriesQueryKeys.PRODUCT_CATEGORIES,
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: [productCategoriesQueryKeys.PRODUCT_CATEGORIES],
+      });
     },
     ...config,
     mutationFn: updateProductCategory,

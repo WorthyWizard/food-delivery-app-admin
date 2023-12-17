@@ -1,4 +1,3 @@
-
 import { MongoObjectIdField } from "@/types/mongo";
 
 import { ProductStatuses } from "../common";
@@ -8,8 +7,8 @@ export interface CreateProduct {
   description: string;
   status: ProductStatuses;
   price: number;
-  image: Buffer;
-  rating?: number;
+  image: File | null;
+  rating?: number | null;
   discount?: number | null;
   categories: string[];
 }

@@ -5,4 +5,5 @@ export const StyledList = styled(List)(({ theme }) => ({
   flexDirection: "column",
   gap: theme.spacing(0.5),
   padding: theme.spacing(1),
+  overflow: "auto",
 })) as typeof List;

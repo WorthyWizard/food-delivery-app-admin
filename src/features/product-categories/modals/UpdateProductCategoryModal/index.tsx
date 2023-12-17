@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 
 import { ButtonWrapper, Form } from "@/components";
-import { ModalHeading } from "@/globalStyled";
+import { FormTextField, useForm } from "@/features/form";
 import { Conditional } from "@/layouts";
 import { Button, Modal, ModalProps } from "@/lib/mui";
-import { FormTextField, useForm } from "@/lib/react-hook-form";
 
 import { useUpdateProductCategory } from "../../api";
 import { useGetProductCategory } from "../../api/getProductCategory";
@@ -30,40 +29,33 @@ export const UpdateProductCategoryModal = (props: Props) => {
 
   const { handleSubmit, control, reset } = form;
 
-  const {
-    data: category,
-    isLoading: getProductCategoryLoading,
-    isError: getProductCategoryError,
-    isSuccess: getProductCategorySuccess,
-  } = useGetProductCategory({
+  const category = useGetProductCategory({
     id: categoryId,
   });
 
-  const {
-    mutate: updateProductCategory,
-    isLoading: updateProductCategoryLoading,
-    isSuccess: updateProductCategorySuccess,
-  } = useUpdateProductCategory();
+  const updateProductCategory = useUpdateProductCategory();
 
   useEffect(() => {
-    if (category && getProductCategorySuccess) {
+    if (category && category.isSuccess) {
+      const { name, slug } = category.data;
+
       reset({
-        name: category.name,
-        slug: category.slug,
+        name,
+        slug,
       });
     }
-  }, [category, getProductCategorySuccess]);
+  }, [category, category.isSuccess]);
 
   useEffect(() => {
-    if (updateProductCategorySuccess) {
+    if (updateProductCategory.isSuccess) {
       onClose && onClose({}, "backdropClick");
     }
-  }, [updateProductCategorySuccess]);
+  }, [updateProductCategory.isSuccess]);
 
   const onSubmit = handleSubmit((submitData) => {
     const { name, slug } = submitData;
 
-    updateProductCategory({
+    updateProductCategory.mutate({
       _id: categoryId!,
       name,
       slug,
@@ -74,17 +66,12 @@ export const UpdateProductCategoryModal = (props: Props) => {
     onClose && onClose({}, "backdropClick");
   };
 
-  const disabled = updateProductCategoryLoading || getProductCategoryLoading;
-
-  const isLoading = getProductCategoryLoading;
-
-  const isError = getProductCategoryError;
+  const disabled = updateProductCategory.isPending || category.isPending;
 
   return (
-    <Modal onClose={closeModalHandler} {...rest}>
-      <ModalHeading>Edit Product Category</ModalHeading>
-      <Conditional isError={isError}>
-        <Form isLoading={isLoading} onSubmit={onSubmit}>
+    <Modal title="Edit Product Category" onClose={closeModalHandler} {...rest}>
+      <Conditional isError={category.isError}>
+        <Form isLoading={category.isPending} onSubmit={onSubmit}>
           <FormTextField
             label="Name"
             config={{

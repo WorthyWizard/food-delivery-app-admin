@@ -2,15 +2,14 @@ import { useMutation } from "@tanstack/react-query";
 
 import { axios } from "@/lib/axios";
 import { MutationConfig, queryClient } from "@/lib/react-query";
-import { FormDataAlike } from "@/types/common";
-import { createFormData } from "@/utils";
+import { createFormData, FormDataAlike } from "@/utils";
 
 import { CreateProduct, Product } from "../types";
 
 import { productsQueryKeys } from "./queryKeys";
 
 export const createProduct = async (
-  body: FormDataAlike<CreateProduct>
+  body: FormDataAlike<CreateProduct>,
 ): Promise<Product> => {
   return axios.post("/products", createFormData(body));
 };
@@ -26,7 +25,9 @@ export const useCreateProduct = (options?: Options) => {
 
   return useMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries([productsQueryKeys.PRODUCTS]);
+      queryClient.invalidateQueries({
+        queryKey: [productsQueryKeys.PRODUCTS],
+      });
     },
     ...config,
     mutationFn: createProduct,

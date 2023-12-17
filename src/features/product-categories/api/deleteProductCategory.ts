@@ -10,7 +10,7 @@ import { PRODUCT_CATEGORIES_PATH } from "./hardcoded";
 import { productCategoriesQueryKeys } from "./queryKeys";
 
 export const deleteProductCategory = async (
-  id: MongoObjectId
+  id: MongoObjectId,
 ): Promise<ProductCategory> => {
   return axios.delete(`${PRODUCT_CATEGORIES_PATH}/${id}`);
 };
@@ -26,9 +26,9 @@ export const useDeleteProductCategory = (options?: Options) => {
 
   return useMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        productCategoriesQueryKeys.PRODUCT_CATEGORIES,
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: [productCategoriesQueryKeys.PRODUCT_CATEGORIES],
+      });
     },
     ...config,
     mutationFn: deleteProductCategory,

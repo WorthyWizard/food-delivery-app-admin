@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 
 import { ButtonWrapper, Form } from "@/components";
+import { FormTextField, useForm } from "@/features/form";
 import { useCreateProductCategory } from "@/features/product-categories";
-import { ModalHeading } from "@/globalStyled";
 import { Conditional } from "@/layouts";
 import { Button, Modal, ModalProps } from "@/lib/mui";
-import { FormTextField, useForm } from "@/lib/react-hook-form";
 
 import {
   CreateProductCategoryFormData,
@@ -26,23 +25,19 @@ export const CreateProductCategoryModal = (props: Props) => {
       },
     });
 
-  const {
-    mutate: createProductCategory,
-    isLoading: createProductCategoryLoading,
-    isSuccess: createProductCategorySuccess,
-  } = useCreateProductCategory();
+  const createProductCategory = useCreateProductCategory();
 
   useEffect(() => {
-    if (createProductCategorySuccess) {
+    if (createProductCategory.isSuccess) {
       onClose && onClose({}, "backdropClick");
       reset();
     }
-  }, [createProductCategorySuccess]);
+  }, [createProductCategory.isSuccess]);
 
   const onSubmit = handleSubmit((formData) => {
     const { name, slug } = formData;
 
-    createProductCategory({
+    createProductCategory.mutate({
       name,
       slug,
     });
@@ -52,11 +47,10 @@ export const CreateProductCategoryModal = (props: Props) => {
     onClose && onClose({}, "backdropClick");
   };
 
-  const disabled = createProductCategoryLoading;
+  const disabled = createProductCategory.isPending;
 
   return (
-    <Modal onClose={closeModalHandler} {...rest}>
-      <ModalHeading>Create Product Category</ModalHeading>
+    <Modal title="New Product Category" onClose={closeModalHandler} {...rest}>
       <Conditional>
         <Form onSubmit={onSubmit}>
           <FormTextField
