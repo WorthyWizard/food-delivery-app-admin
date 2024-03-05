@@ -62,7 +62,13 @@ export const Breadcrumbs = (props: Props) => {
 
         if (last) {
           pathRender = (
-            <Typography variant="body2" color="text.primary" key={to}>
+            <Typography
+              variant="body2"
+              fontWeight={500}
+              lineHeight={0}
+              color="text.primary"
+              key={to}
+            >
               {label}
             </Typography>
           );

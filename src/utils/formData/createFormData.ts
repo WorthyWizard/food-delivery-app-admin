@@ -8,7 +8,7 @@ export const createFormData = <T extends Record<string, any>>(
   for (const property in source) {
     const value = source[property];
 
-    if (value instanceof Blob) {
+    if (value instanceof Blob || typeof value === "string") {
       formData.append(property, value);
     } else if (value === undefined) {
       continue;

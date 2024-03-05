@@ -6,24 +6,16 @@ import { ExtractFnReturnType, QueryConfig } from "@/lib/react-query";
 
 import { ProductCategory } from "../types";
 
-import { PRODUCT_CATEGORIES_PATH } from "./hardcoded";
+import { PRODUCT_CATEGORIES_PATH } from "./constants";
 import { productCategoriesQueryKeys } from "./queryKeys";
 
-export const getProductCategories = async () => {
-  const { data } = await axios.get<ProductCategory[]>(PRODUCT_CATEGORIES_PATH);
-
-  return data;
+export const getProductCategories = async (): Promise<ProductCategory[]> => {
+  return axios.get(PRODUCT_CATEGORIES_PATH);
 };
 
 type QueryFnType = typeof getProductCategories;
 
-interface Options {
-  config?: QueryConfig<QueryFnType>;
-}
-
-export const useGetProductCategories = (options?: Options) => {
-  const { config } = options || {};
-
+export const useGetProductCategories = (config?: QueryConfig<QueryFnType>) => {
   return useQuery<ExtractFnReturnType<QueryFnType>, AxiosError>({
     ...config,
     queryFn: () => getProductCategories(),

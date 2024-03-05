@@ -101,7 +101,7 @@ export const ImageUpload = (props: ImageUploadProps) => {
       </ImageUploadWrapper>
       {imageFile && (
         <Typography variant="caption" mt={0.5} ml={1}>
-          {`${imageFile.name}, ${filesize(imageFile.size ?? null)}`}
+          {imageFile.name}, {filesize(imageFile.size ?? null)}
         </Typography>
       )}
     </Stack>

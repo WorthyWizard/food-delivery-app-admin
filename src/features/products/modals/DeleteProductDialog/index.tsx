@@ -13,7 +13,7 @@ import { Button } from "@/lib/mui";
 import { useDeleteProduct } from "../../api";
 
 interface Props extends DialogProps {
-  productId: string | null;
+  productId: number | null;
 }
 
 export const DeleteProductDialog = (props: Props) => {

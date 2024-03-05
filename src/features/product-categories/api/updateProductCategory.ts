@@ -1,35 +1,43 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { axios } from "@/lib/axios";
-import { MutationConfig, queryClient } from "@/lib/react-query";
+import { MutationConfig, queryClient, UpdateOptions } from "@/lib/react-query";
 
 import { ProductCategory, UpdateProductCategory } from "../types";
 
-import { PRODUCT_CATEGORIES_PATH } from "./hardcoded";
+import { PRODUCT_CATEGORIES_PATH } from "./constants";
 import { productCategoriesQueryKeys } from "./queryKeys";
 
 export const updateProductCategory = async (
-  body: UpdateProductCategory,
+  options: UpdateOptions<UpdateProductCategory>,
 ): Promise<ProductCategory> => {
-  return axios.patch(`${PRODUCT_CATEGORIES_PATH}/${body._id}`, body);
+  const { body, id } = options;
+
+  return axios.patch(`${PRODUCT_CATEGORIES_PATH}/${id}`, body);
 };
 
-type MutationFnType = typeof updateProductCategory;
-
-interface Options {
-  config?: MutationConfig<MutationFnType>;
-}
-
-export const useUpdateProductCategory = (options?: Options) => {
-  const { config } = options || {};
+export const useUpdateProductCategory = (
+  config?: MutationConfig<typeof updateProductCategory>,
+) => {
+  const { onSuccess, ...restConfig } = config || {};
 
   return useMutation({
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: [productCategoriesQueryKeys.PRODUCT_CATEGORIES],
+        exact: true,
       });
+
+      queryClient.invalidateQueries({
+        queryKey: [
+          productCategoriesQueryKeys.PRODUCT_CATEGORIES,
+          { id: variables.id },
+        ],
+      });
+
+      onSuccess && onSuccess(data, variables, context);
     },
-    ...config,
+    ...restConfig,
     mutationFn: updateProductCategory,
   });
 };

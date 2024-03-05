@@ -4,12 +4,13 @@ import { OutlinedTextFieldProps, TextField } from "@mui/material";
 
 import { ControlledFormFieldProps } from "../types";
 
-interface Props<TFormValues extends FieldValues = FieldValues>
-  extends Omit<OutlinedTextFieldProps, "variant">,
+export interface FormTextFieldProps<
+  TFormValues extends FieldValues = FieldValues,
+> extends Omit<OutlinedTextFieldProps, "variant">,
     ControlledFormFieldProps<TFormValues> {}
 
 export const FormTextField = <TFieldValues extends FieldValues = FieldValues>(
-  props: Props<TFieldValues>,
+  props: FormTextFieldProps<TFieldValues>,
 ) => {
   const { config, onChange, ...rest } = props;
 

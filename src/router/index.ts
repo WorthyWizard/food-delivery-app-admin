@@ -1,4 +1,4 @@
-export * from "./endpoints";
-export * from "./params";
+export * from "./endpoints/endpoints";
+export * from "./endpoints/params";
+export * from "./endpoints/types";
 export * from "./Router";
-export * from "./types";

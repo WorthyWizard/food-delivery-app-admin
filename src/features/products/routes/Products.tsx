@@ -1,7 +1,5 @@
-import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { GridRowIdGetter } from "@mui/x-data-grid";
 
 import { ButtonWrapper } from "@/components";
 import { Button, DataGrid } from "@/lib/mui";
@@ -10,27 +8,19 @@ import { productsEndpointsMap } from "@/router";
 import { useGetProducts } from "../api";
 import { DeleteProductDialog } from "../modals";
 import { useProductModals } from "../store";
-import { Product } from "../types/queries";
 
 import { productColumns } from "./columns";
 
 export const Products = () => {
   const navigate = useNavigate();
 
-  const { deleteProduct, closeMutationModal } = useProductModals();
+  const { deleteModal, closeMutationModal } = useProductModals();
 
-  const {
-    data: products,
-    isLoading: getProductsLoading,
-    isFetching: getProductsFetching,
-    isError: getProductsError,
-  } = useGetProducts();
+  const products = useGetProducts();
 
   const goToNewProductPage = () => {
     navigate(productsEndpointsMap.NEW);
   };
-
-  const getRowId: GridRowIdGetter<Product> = useCallback((row) => row._id, []);
 
   return (
     <>
@@ -44,16 +34,16 @@ export const Products = () => {
         </Button>
       </ButtonWrapper>
       <DataGrid
-        isError={getProductsError}
-        loading={getProductsLoading || getProductsFetching}
+        sx={{ border: "none" }}
+        isError={products.isError}
+        loading={products.isLoading || products.isPending}
         columns={productColumns}
-        rows={products ?? []}
-        getRowId={getRowId}
+        rows={products.data ?? []}
       />
       <DeleteProductDialog
-        open={deleteProduct.isOpen}
-        productId={deleteProduct.id}
-        onClose={() => closeMutationModal("deleteProduct")}
+        open={deleteModal.isOpen}
+        productId={deleteModal.id}
+        onClose={() => closeMutationModal("deleteModal")}
       />
     </>
   );

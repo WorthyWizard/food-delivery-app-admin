@@ -15,7 +15,9 @@ export const useForm = <TFormValues extends FieldValues = FieldValues>(
   const hookForm = useHookForm<TFormValues>({
     mode: "onSubmit",
     reValidateMode: "onChange",
-    resolver: zodResolver(validationSchema),
+    ...(validationSchema && {
+      resolver: zodResolver(validationSchema),
+    }),
     ...rest,
   });
 

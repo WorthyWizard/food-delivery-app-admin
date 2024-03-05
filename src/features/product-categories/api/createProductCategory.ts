@@ -5,7 +5,7 @@ import { MutationConfig, queryClient } from "@/lib/react-query";
 
 import { CreateProductCategory, ProductCategory } from "../types";
 
-import { PRODUCT_CATEGORIES_PATH } from "./hardcoded";
+import { PRODUCT_CATEGORIES_PATH } from "./constants";
 import { productCategoriesQueryKeys } from "./queryKeys";
 
 export const createProductCategory = async (
@@ -14,22 +14,21 @@ export const createProductCategory = async (
   return axios.post(PRODUCT_CATEGORIES_PATH, body);
 };
 
-type MutationFnType = typeof createProductCategory;
-
-interface Options {
-  config?: MutationConfig<MutationFnType>;
-}
-
-export const useCreateProductCategory = (options?: Options) => {
-  const { config } = options || {};
+export const useCreateProductCategory = (
+  config?: MutationConfig<typeof createProductCategory>,
+) => {
+  const { onSuccess, ...restConfig } = config || {};
 
   return useMutation({
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: [productCategoriesQueryKeys.PRODUCT_CATEGORIES],
+        exact: true,
       });
+
+      onSuccess && onSuccess(data, variables, context);
     },
-    ...config,
+    ...restConfig,
     mutationFn: createProductCategory,
   });
 };

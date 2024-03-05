@@ -6,16 +6,16 @@ import {
 import { ZodType } from "zod";
 
 export type FilteredUseFormProps<
-  TFormValues extends FieldValues = FieldValues
+  TFormValues extends FieldValues = FieldValues,
 > = Omit<UseHookFormProps<TFormValues>, "resolver">;
 
 export interface UseFormProps<TFormValues extends FieldValues = FieldValues>
   extends FilteredUseFormProps<TFormValues> {
-  validationSchema: ZodType;
+  validationSchema?: ZodType;
 }
 
 export interface ControlledFormFieldProps<
-  TValues extends FieldValues = FieldValues
+  TValues extends FieldValues = FieldValues,
 > {
   config: UseControllerProps<TValues>;
 }

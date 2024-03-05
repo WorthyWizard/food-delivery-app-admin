@@ -4,7 +4,7 @@ import { SelectableOption, useForm } from "@/features/form";
 import { useRouterParams } from "@/hooks";
 
 import { useCreateProduct, useUpdateProduct } from "../api";
-import { useGetProduct } from "../api/getProduct";
+import { useGetProduct } from "../api";
 import { ProductStatuses, productStatusesMap } from "../common";
 import { ProductForm, ProductFormRefValue } from "../components";
 import { CreateProduct } from "../types";
@@ -17,7 +17,9 @@ interface Props {
 export const Product = (props: Props) => {
   const { type } = props;
 
-  const { productId } = useRouterParams();
+  const params = useRouterParams();
+
+  const productId = parseInt(params.productId!);
 
   const productFormStateRef = useRef<ProductFormRefValue>(null);
 
@@ -37,27 +39,24 @@ export const Product = (props: Props) => {
 
   const { handleSubmit, reset } = form;
 
-  const product = useGetProduct({
-    id: productId!,
-    config: {
+  const product = useGetProduct(
+    { id: productId! },
+    {
       enabled: type === "edit" && Boolean(productId),
+    },
+  );
+
+  const updateProduct = useUpdateProduct({
+    onSuccess: () => {
+      productFormStateRef.current?.resetImageFile();
     },
   });
 
-  const updateProduct = useUpdateProduct({
-    config: {
-      onSuccess: () => {
-        productFormStateRef.current?.resetImageFile();
-      },
-    },
-  });
   const createProduct = useCreateProduct({
-    config: {
-      onSuccess: () => {
-        reset();
-        createProduct.reset();
-        productFormStateRef.current?.resetImageFile();
-      },
+    onSuccess: () => {
+      reset();
+      createProduct.reset();
+      productFormStateRef.current?.resetImageFile();
     },
   });
 
@@ -67,9 +66,9 @@ export const Product = (props: Props) => {
         product.data;
 
       const categoriesOptions: SelectableOption[] = product.data.categories.map(
-        ({ name, _id }) => ({
+        ({ name, id }) => ({
           label: name,
-          value: _id,
+          value: String(id),
         }),
       );
 
@@ -90,7 +89,9 @@ export const Product = (props: Props) => {
     const { categories, discount, status, price, image, rating, ...rest } =
       submitData;
 
-    const categoriesIds = categories.map((category) => category.value);
+    const categoriesIds = categories.map((category) =>
+      parseInt(category.value),
+    );
 
     const data: CreateProduct = {
       ...rest,
@@ -103,7 +104,7 @@ export const Product = (props: Props) => {
     };
 
     if (type === "edit") {
-      updateProduct.mutate({ ...data, _id: productId! });
+      updateProduct.mutate({ id: productId, body: data });
     } else {
       createProduct.mutate(data);
     }

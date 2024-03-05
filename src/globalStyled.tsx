@@ -7,6 +7,7 @@ export const StyledForm = styled(
     </Stack>
   ),
 )(({ theme }) => ({
+  width: "100%",
   height: "100%",
   alignItems: "center",
   gap: theme.spacing(1),
