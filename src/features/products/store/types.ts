@@ -1,5 +1,3 @@
-import { MongoObjectId } from "@/types/mongo";
-
 export type ModalTypes = "createProduct";
 
 export type ModalWithIdsTypes = "updateProduct" | "deleteProduct";
@@ -9,7 +7,7 @@ export interface ModalState {
 }
 
 export interface ModalStateWithMutation extends ModalState {
-  id: MongoObjectId | null;
+  id: number | null;
 }
 
 export interface ProductModalsState {
@@ -20,5 +18,5 @@ export interface ProductModalsState {
 
 export interface MutationPayload {
   name: ModalWithIdsTypes;
-  id: MongoObjectId | null;
+  id: number | null;
 }

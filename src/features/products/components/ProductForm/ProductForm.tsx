@@ -85,9 +85,9 @@ export const ProductForm = forwardRef<ProductFormRefValue, Props>(
     });
 
     const categoriesOptions: SelectableOption[] = (categories.data ?? []).map(
-      ({ name, _id }) => ({
+      ({ name, id }) => ({
         label: name,
-        value: _id,
+        value: String(id),
       }),
     );
 
@@ -100,7 +100,7 @@ export const ProductForm = forwardRef<ProductFormRefValue, Props>(
       >
         <Form onSubmit={onSubmit}>
           <Stack width="100%" height="100%" direction="row" gap={3}>
-            <Stack width="100%" gap={1} overflow="auto">
+            <Stack width="100%" gap={1} sx={{ overflowY: "auto" }}>
               <FormTextField
                 label="Title"
                 config={{ control, name: "title" }}
@@ -117,23 +117,23 @@ export const ProductForm = forwardRef<ProductFormRefValue, Props>(
                 </Button>
               </ButtonWrapper>
             </Stack>
-            <Stack minWidth={300} gap={2}>
-              <Stack gap={0.5}>
+            <Stack width="100%" maxWidth={300}>
+              <Stack gap={0.5} mb={2}>
                 <ImageUpload
                   isError={Boolean(imageErrorMessage)}
                   imageFile={imageFile}
                   imagePreview={imagePreview}
-                  wrapperProps={{ sx: { maxWidth: "100%" } }}
+                  wrapperProps={{ sx: { maxWidth: "100%", height: 300 } }}
                   fileRejections={fileRejections}
                   dropzoneState={dropzoneState}
                 />
                 {imageErrorMessage && (
-                  <Typography color="error" variant="caption">
+                  <Typography color="error" variant="caption" ml={1}>
                     {imageErrorMessage}
                   </Typography>
                 )}
               </Stack>
-              <Stack pr={1} overflow="auto" gap={0.5}>
+              <Stack overflow="auto" gap={0.5}>
                 <FormSelect
                   label="Status"
                   options={statusOptions}

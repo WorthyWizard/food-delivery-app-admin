@@ -8,10 +8,8 @@ import { Product } from "../types";
 
 import { productsQueryKeys } from "./queryKeys";
 
-export const getProducts = async () => {
-  const { data } = await axios.get<Product[]>("/products");
-
-  return data;
+export const getProducts = async (): Promise<Product[]> => {
+  return axios.get("/products");
 };
 
 type QueryFnType = typeof getProducts;

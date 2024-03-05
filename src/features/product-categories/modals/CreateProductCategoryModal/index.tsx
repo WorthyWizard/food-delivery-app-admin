@@ -9,7 +9,7 @@ import { Button, Modal, ModalProps } from "@/lib/mui";
 import {
   CreateProductCategoryFormData,
   CreateProductCategorySchema,
-} from "../../forms";
+} from "../../validation";
 
 interface Props extends ModalProps {}
 
@@ -34,8 +34,8 @@ export const CreateProductCategoryModal = (props: Props) => {
     }
   }, [createProductCategory.isSuccess]);
 
-  const onSubmit = handleSubmit((formData) => {
-    const { name, slug } = formData;
+  const onSubmit = handleSubmit((submitData) => {
+    const { name, slug } = submitData;
 
     createProductCategory.mutate({
       name,

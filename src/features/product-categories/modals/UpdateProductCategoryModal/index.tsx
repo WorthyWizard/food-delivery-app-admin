@@ -10,10 +10,10 @@ import { useGetProductCategory } from "../../api/getProductCategory";
 import {
   UpdateProductCategoryFormData,
   UpdateProductCategorySchema,
-} from "../../forms";
+} from "../../validation";
 
 interface Props extends ModalProps {
-  categoryId: string | null;
+  categoryId: number | null;
 }
 
 export const UpdateProductCategoryModal = (props: Props) => {
@@ -29,14 +29,19 @@ export const UpdateProductCategoryModal = (props: Props) => {
 
   const { handleSubmit, control, reset } = form;
 
-  const category = useGetProductCategory({
-    id: categoryId,
-  });
+  const category = useGetProductCategory(
+    {
+      id: categoryId,
+    },
+    {
+      enabled: Boolean(categoryId),
+    },
+  );
 
   const updateProductCategory = useUpdateProductCategory();
 
   useEffect(() => {
-    if (category && category.isSuccess) {
+    if (category.isSuccess) {
       const { name, slug } = category.data;
 
       reset({
@@ -44,7 +49,7 @@ export const UpdateProductCategoryModal = (props: Props) => {
         slug,
       });
     }
-  }, [category, category.isSuccess]);
+  }, [category.isSuccess]);
 
   useEffect(() => {
     if (updateProductCategory.isSuccess) {
@@ -56,9 +61,11 @@ export const UpdateProductCategoryModal = (props: Props) => {
     const { name, slug } = submitData;
 
     updateProductCategory.mutate({
-      _id: categoryId!,
-      name,
-      slug,
+      id: categoryId!,
+      body: {
+        name,
+        slug,
+      },
     });
   });
 

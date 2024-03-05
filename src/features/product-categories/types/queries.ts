@@ -1,6 +1,5 @@
-import { MongoObjectIdField } from "@/types/mongo";
-
-export interface ProductCategory extends MongoObjectIdField {
+export interface ProductCategory {
+  id: number;
   name: string;
   slug: string;
 }

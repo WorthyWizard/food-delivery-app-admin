@@ -5,7 +5,7 @@ import { params, productsEndpointsMap } from "@/router";
 import { Product } from "./Product";
 import { Products } from "./Products";
 
-export const ProductRoutes = () => {
+export const ProductsRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Products />} />

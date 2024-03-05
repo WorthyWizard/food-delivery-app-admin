@@ -1,0 +1,10 @@
+export const HOME = "/";
+export const AUTH = "auth";
+export const PRODUCTS = "products";
+export const USERS = "users";
+export const CATEGORIES = "product-categories";
+export const NEW = "new";
+export const EDIT = "edit";
+export const ORDERS = "orders";
+export const SIGN_IN = "sign-in";
+export const SIGN_UP = "sign-up";

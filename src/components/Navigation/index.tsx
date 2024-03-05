@@ -1,5 +1,6 @@
 import { MouseEventHandler, useState } from "react";
 import CategoryIcon from "@mui/icons-material/Category";
+import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
 import PeopleIcon from "@mui/icons-material/People";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { Collapse, List } from "@mui/material";
@@ -25,6 +26,7 @@ export const Navigation = () => {
   ) => {
     event.stopPropagation();
     event.preventDefault();
+
     setProductsItemOpen((prevState) => !prevState);
   };
 
@@ -38,6 +40,7 @@ export const Navigation = () => {
       />
       <ListItemLink
         hasChildren
+        open={productsItemOpen}
         selected={currentPath === mainEndpointsMap.PRODUCTS}
         primary="Products"
         icon={<ShoppingBagIcon />}
@@ -57,6 +60,12 @@ export const Navigation = () => {
           />
         </List>
       </Collapse>
+      <ListItemLink
+        selected={currentPath === mainEndpointsMap.ORDERS}
+        primary="Orders"
+        icon={<ListAltRoundedIcon />}
+        to={mainEndpointsMap.ORDERS}
+      />
     </StyledList>
   );
 };

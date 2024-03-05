@@ -1,93 +1,39 @@
-import { ReactNode, useCallback } from "react";
+import { ReactNode } from "react";
 import { FieldValues, useController } from "react-hook-form";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {
-  Box,
-  Chip,
-  FormControl,
-  FormControlProps,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  SelectProps,
-} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
 
-import { ControlledFormFieldProps, SelectableOption } from "../types";
+import { Select, SelectProps } from "@/lib/mui";
 
-type FilteredSelectProps = Omit<SelectProps<string | string[]>, "error">;
+import { ControlledFormFieldProps } from "../types";
 
 interface Props<TFormValues extends FieldValues = FieldValues>
-  extends FilteredSelectProps,
-    ControlledFormFieldProps<TFormValues> {
-  options: SelectableOption[];
-  wrapperProps?: FormControlProps;
-}
+  extends SelectProps,
+    ControlledFormFieldProps<TFormValues> {}
 
 export const FormSelect = <TFieldValues extends FieldValues = FieldValues>(
-  props: Props<TFieldValues>
+  props: Props<TFieldValues>,
 ) => {
-  const { config, onChange, label, options, multiple, wrapperProps, ...rest } =
-    props;
+  const { config, onChange, ...rest } = props;
 
   const { field, fieldState } = useController(config);
 
   const { error } = fieldState;
   const { ref, onChange: onFieldChange, ...fieldRest } = field;
 
-  const changeHandler = (
-    event: SelectChangeEvent<string | string[]>,
-    child: ReactNode
-  ) => {
+  const changeHandler = (event: SelectChangeEvent, child: ReactNode) => {
     onFieldChange(event.target.value as any);
 
     onChange && onChange(event, child);
   };
 
-  const renderValue = useCallback(
-    (selected: string | string[]) => (
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-        {Array.isArray(selected)
-          ? selected.map((value) => (
-              <Chip key={value} label={options[Number(value)].label} />
-            ))
-          : selected}
-      </Box>
-    ),
-    []
-  );
-
   return (
-    <FormControl
-      sx={{ maxWidth: "800px" }}
-      fullWidth
+    <Select
+      inputRef={ref}
       error={Boolean(error?.message)}
-      {...wrapperProps}
-    >
-      <InputLabel error={Boolean(error?.message)}>{label}</InputLabel>
-      <Select
-        label={label}
-        onChange={changeHandler}
-        multiple={multiple}
-        inputRef={ref}
-        error={Boolean(error?.message)}
-        IconComponent={KeyboardArrowDownIcon}
-        {...(multiple && {
-          renderValue,
-        })}
-        {...fieldRest}
-        {...rest}
-      >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </Select>
-      {Boolean(error?.message) && (
-        <FormHelperText error>{error?.message}</FormHelperText>
-      )}
-    </FormControl>
+      errorMessage={error?.message}
+      onChange={changeHandler}
+      {...fieldRest}
+      {...rest}
+    />
   );
 };

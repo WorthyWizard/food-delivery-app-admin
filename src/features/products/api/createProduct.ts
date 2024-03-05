@@ -11,25 +11,24 @@ import { productsQueryKeys } from "./queryKeys";
 export const createProduct = async (
   body: FormDataAlike<CreateProduct>,
 ): Promise<Product> => {
-  return axios.post("/products", createFormData(body));
+  return await axios.post("/products", createFormData(body));
 };
 
-type MutationFnType = typeof createProduct;
-
-interface Options {
-  config?: MutationConfig<MutationFnType>;
-}
-
-export const useCreateProduct = (options?: Options) => {
-  const { config } = options || {};
+export const useCreateProduct = (
+  config?: MutationConfig<typeof createProduct>,
+) => {
+  const { onSuccess, ...restConfig } = config || {};
 
   return useMutation({
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: [productsQueryKeys.PRODUCTS],
+        exact: true,
       });
+
+      onSuccess && onSuccess(data, variables, context);
     },
-    ...config,
+    ...restConfig,
     mutationFn: createProduct,
   });
 };

@@ -1,9 +1,9 @@
 import { ProductCategory } from "@/features/product-categories";
-import { MongoObjectIdField } from "@/types/mongo";
 
 import { ProductStatuses } from "../common";
 
-export interface Product extends MongoObjectIdField {
+export interface Product {
+  id: number;
   title: string;
   description: string;
   price: number;

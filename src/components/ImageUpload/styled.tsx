@@ -3,8 +3,8 @@ import { Stack, StackProps, styled } from "@mui/material";
 
 export const ImageUploadWrapper = styled(Stack)(() => ({
   width: "100%",
-  maxWidth: "250px",
-  height: "250px",
+  maxWidth: "300px",
+  height: "300px",
   position: "relative",
   "&:hover .img-controls": {
     opacity: 1,

@@ -1,5 +1,3 @@
-import { MongoObjectIdField } from "@/types/mongo";
-
 import { ProductStatuses } from "../common";
 
 export interface CreateProduct {
@@ -10,7 +8,7 @@ export interface CreateProduct {
   image: File | null;
   rating?: number | null;
   discount?: number | null;
-  categories: string[];
+  categories: number[];
 }
 
-export type UpdateProduct = Partial<CreateProduct> & MongoObjectIdField;
+export type UpdateProduct = Partial<CreateProduct>;

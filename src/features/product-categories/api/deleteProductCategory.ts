@@ -2,35 +2,32 @@ import { useMutation } from "@tanstack/react-query";
 
 import { axios } from "@/lib/axios";
 import { MutationConfig, queryClient } from "@/lib/react-query";
-import { MongoObjectId } from "@/types/mongo";
 
 import { ProductCategory } from "../types";
 
-import { PRODUCT_CATEGORIES_PATH } from "./hardcoded";
+import { PRODUCT_CATEGORIES_PATH } from "./constants";
 import { productCategoriesQueryKeys } from "./queryKeys";
 
 export const deleteProductCategory = async (
-  id: MongoObjectId,
+  id: number,
 ): Promise<ProductCategory> => {
   return axios.delete(`${PRODUCT_CATEGORIES_PATH}/${id}`);
 };
 
-type MutationFnType = typeof deleteProductCategory;
-
-interface Options {
-  config?: MutationConfig<MutationFnType>;
-}
-
-export const useDeleteProductCategory = (options?: Options) => {
-  const { config } = options || {};
+export const useDeleteProductCategory = (
+  config?: MutationConfig<typeof deleteProductCategory>,
+) => {
+  const { onSuccess, ...restConfig } = config || {};
 
   return useMutation({
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: [productCategoriesQueryKeys.PRODUCT_CATEGORIES],
       });
+
+      onSuccess && onSuccess(data, variables, context);
     },
-    ...config,
+    ...restConfig,
     mutationFn: deleteProductCategory,
   });
 };

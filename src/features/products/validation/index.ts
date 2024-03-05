@@ -2,8 +2,10 @@ import { array, coerce, custom, literal, object, string, z } from "zod";
 
 import { selectableOptionSchema } from "@/validation";
 
+import { MAX_IMAGE_SIZE } from "./constants";
+
 export const ProductSchema = object({
-  title: string().min(5).max(25),
+  title: string().min(5).max(50),
   description: string().min(5).max(500),
   status: string(),
   price: coerce
@@ -20,15 +22,15 @@ export const ProductSchema = object({
       if (value === "") return true;
 
       if (value instanceof File) {
-        if (value.size > 10 * 1024 * 1024) {
+        if (value.size > MAX_IMAGE_SIZE * 1024 * 1024) {
           return ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "The profile picture must be a maximum of 10MB.",
+            message: `The maximum image size is ${MAX_IMAGE_SIZE}MB`,
           });
         } else if (!value.type?.startsWith("image")) {
           return ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Only images are allowed to be sent.",
+            message: "Only images are allowed to be sent",
           });
         }
       } else {

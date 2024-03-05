@@ -1,28 +1,39 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { ProductCategories } from "@/features/product-categories";
-import { ProductRoutes } from "@/features/products";
-import { Dashboard } from "@/layouts";
+import { AuthRoutes } from "@/features/auth";
+import { OrdersRoutes } from "@/features/orders";
+import { ProductCategoriesRoutes } from "@/features/product-categories";
+import { ProductsRoutes } from "@/features/products";
+import { UsersRoutes } from "@/features/users";
+import { Root } from "@/layouts/Root";
 
-import { mainEndpointsMap } from "./endpoints";
+import { mainEndpointsMap } from "./endpoints/endpoints";
 
 export const router = createBrowserRouter([
   {
     path: mainEndpointsMap.HOME,
-    element: <Dashboard />,
+    element: <Root />,
     children: [
       {
         path: `${mainEndpointsMap.PRODUCTS}/*`,
-        element: <ProductRoutes />,
+        element: <ProductsRoutes />,
       },
       {
         path: mainEndpointsMap.USERS,
-        element: <h1>Users</h1>,
+        element: <UsersRoutes />,
       },
       {
         path: mainEndpointsMap.CATEGORIES,
-        element: <ProductCategories />,
+        element: <ProductCategoriesRoutes />,
+      },
+      {
+        path: mainEndpointsMap.ORDERS,
+        element: <OrdersRoutes />,
       },
     ],
+  },
+  {
+    path: `${mainEndpointsMap.AUTH}/*`,
+    element: <AuthRoutes />,
   },
 ]);

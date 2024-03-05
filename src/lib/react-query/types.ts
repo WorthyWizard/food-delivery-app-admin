@@ -16,3 +16,8 @@ export type MutationConfig<MutationFnType extends (...args: any) => any> =
     AxiosError,
     Parameters<MutationFnType>[0]
   >;
+
+export interface UpdateOptions<T extends object> {
+  id: number;
+  body: T;
+}

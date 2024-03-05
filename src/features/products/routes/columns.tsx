@@ -1,7 +1,10 @@
 import { Avatar, Rating, Stack, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
-import { ProductActions } from "../components";
+import { createActionsColumn } from "@/common/grid";
+import { productsEndpointsMap } from "@/router";
+
+import { useProductModals } from "../store";
 import { Product } from "../types/queries";
 
 export const productColumns: GridColDef<Product>[] = [
@@ -11,7 +14,7 @@ export const productColumns: GridColDef<Product>[] = [
     width: 400,
     renderCell: ({ value, row }) => (
       <Stack direction="row" gap={1} alignItems="center">
-        <Avatar imgProps={{ draggable: false }} src={row.imageUrl} />
+        <Avatar slotProps={{ img: { draggable: false } }} src={row.imageUrl} />
         <Typography variant="body2">{value}</Typography>
       </Stack>
     ),
@@ -35,13 +38,12 @@ export const productColumns: GridColDef<Product>[] = [
       <Rating readOnly value={row.rating} precision={0.1} />
     ),
   },
-  {
-    field: "actions",
-    headerName: "Actions",
-    sortable: false,
-    disableColumnMenu: true,
-    hideable: false,
-    width: 150,
-    renderCell: ({ id }) => <ProductActions productId={id as string} />,
-  },
+  createActionsColumn({
+    store: useProductModals,
+    options: {
+      navigations: {
+        edit: ({ id }) => `${id}/${productsEndpointsMap.EDIT}`,
+      },
+    },
+  }),
 ];

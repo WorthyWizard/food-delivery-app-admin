@@ -1,6 +1,8 @@
 import { GridColDef } from "@mui/x-data-grid";
 
-import { ProductCategoryActions } from "../components";
+import { createActionsColumn } from "@/common/grid";
+
+import { useProductCategoryModals } from "../store";
 import { ProductCategory } from "../types";
 
 export const categoriesColumns: GridColDef<ProductCategory>[] = [
@@ -12,15 +14,7 @@ export const categoriesColumns: GridColDef<ProductCategory>[] = [
     field: "slug",
     width: 200,
   },
-  {
-    field: "actions",
-    headerName: "Actions",
-    sortable: false,
-    disableColumnMenu: true,
-    hideable: false,
-    width: 100,
-    renderCell: ({ id }) => {
-      return <ProductCategoryActions productId={id as string} />;
-    },
-  },
+  createActionsColumn({
+    store: useProductCategoryModals,
+  }),
 ];

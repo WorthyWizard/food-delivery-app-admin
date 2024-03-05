@@ -3,32 +3,30 @@ import { AxiosError } from "axios";
 
 import { axios } from "@/lib/axios";
 import { ExtractFnReturnType, QueryConfig } from "@/lib/react-query";
-import { MongoObjectId } from "@/types/mongo";
 
 import { Product } from "../types";
 
 import { productsQueryKeys } from "./queryKeys";
 
-export const getProduct = async (id: MongoObjectId) => {
-  const { data } = await axios.get<Product>(`/products/${id}`);
-
-  return data;
+export const getProduct = async (id: number): Promise<Product> => {
+  return axios.get(`/products/${id}`);
 };
 
 type QueryFnType = typeof getProduct;
 
 interface Options {
-  id: MongoObjectId | null;
-  config?: QueryConfig<QueryFnType>;
+  id: number;
 }
 
-export const useGetProduct = (options: Options) => {
-  const { id, config } = options || {};
+export const useGetProduct = (
+  options: Options,
+  config?: QueryConfig<QueryFnType>,
+) => {
+  const { id } = options;
 
   return useQuery<ExtractFnReturnType<QueryFnType>, AxiosError>({
-    enabled: Boolean(id),
     ...config,
     queryFn: () => getProduct(id!),
-    queryKey: [productsQueryKeys.PRODUCTS, id],
+    queryKey: [productsQueryKeys.PRODUCTS, { id }],
   });
 };
